@@ -1,5 +1,4 @@
 # File: thehive_connector.py
-#
 # Copyright (c) 2018-2021 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +14,19 @@
 #
 #
 # Phantom App imports
+import json
+from urllib.parse import quote
+
+import magic
 import phantom.app as phantom
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
 import phantom.rules as ph_rules
+import requests
+from bs4 import BeautifulSoup
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
 
 # Usage of the consts file is recommended
 from thehive_consts import *
-import requests
-import json
-import magic
-from bs4 import BeautifulSoup
-from urllib.parse import quote
 
 
 class RetVal(tuple):
@@ -50,6 +50,31 @@ class ThehiveConnector(BaseConnector):
 
         self._api_key = None
 
+    def _validate_integer(self, action_result, parameter, key, allow_zero=False):
+        """ This function is a validation function to check if the provided input parameter value
+        is a non-zero positive integer and returns the integer value of the parameter itself.
+        :param action_result: Action result object
+        :param parameter: input parameter
+        :param key: input parameter message key
+        :param allow_zero: whether to allow zero as a valid integer or not
+        :return: integer value of the parameter
+        """
+        if parameter is not None:
+            try:
+                if not float(parameter).is_integer():
+                    return action_result.set_status(phantom.APP_ERROR, INVALID_INT_ERR_MSG.format(key)), None
+
+                parameter = int(parameter)
+            except:
+                return action_result.set_status(phantom.APP_ERROR, INVALID_INT_ERR_MSG.format(key)), None
+
+            if parameter < 0:
+                return action_result.set_status(phantom.APP_ERROR, INVALID_NON_NEG_INT_ERR_MSG.format(key)), None
+            if not allow_zero and parameter == 0:
+                return action_result.set_status(phantom.APP_ERROR, INVALID_NON_NEG_NON_ZERO_ERR_MSG.format(key)), None
+
+        return phantom.APP_SUCCESS, parameter
+
     def _get_error_message_from_exception(self, e):
         """
         Get appropriate error message from the exception.
@@ -67,7 +92,7 @@ class ThehiveConnector(BaseConnector):
                     error_msg = e.args[1]
                 elif len(e.args) == 1:
                     error_msg = e.args[0]
-        except:
+        except Exception:
             pass
 
         if not error_code:
@@ -101,11 +126,11 @@ class ThehiveConnector(BaseConnector):
             split_lines = error_text.split('\n')
             split_lines = [x.strip() for x in split_lines if x.strip()]
             error_text = '\n'.join(split_lines)
-        except:
+        except Exception:
             error_text = "Cannot parse error details"
 
         message = "Status Code: {0}. Data from server:\n{1}\n".format(status_code,
-                error_text)
+                                                                      error_text)
 
         message = message.replace('{', '{{').replace('}', '}}')
 
@@ -117,7 +142,8 @@ class ThehiveConnector(BaseConnector):
         try:
             resp_json = r.json()
         except Exception as e:
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "Unable to parse JSON response. Error: {0}".format(str(e))), None)
+            return RetVal(action_result.set_status(phantom.APP_ERROR,
+                                                   "Unable to parse JSON response. Error: {0}".format(str(e))), None)
 
         # Please specify the status codes here
         if 200 <= r.status_code < 399:
@@ -134,7 +160,7 @@ class ThehiveConnector(BaseConnector):
             if resp_json.get('errors', [])[0][0].get('message'):
                 message = "Error from server. Status Code: {0} Data from server: {1}".format(
                     r.status_code, resp_json.get('errors', [])[0][0].get('message'))
-        except:
+        except Exception:
             pass
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -281,7 +307,8 @@ class ThehiveConnector(BaseConnector):
         # make rest call
         authToken = "Bearer {}".format(self._api_key)
         headers = {'Content-Type': 'application/json', 'Authorization': authToken}
-        ret_val, response = self._make_rest_call('api/case', action_result, params=None, data=data, headers=headers, method="post")
+        ret_val, response = self._make_rest_call('api/case', action_result, params=None, data=data,
+                                                 headers=headers, method="post")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -414,7 +441,7 @@ class ThehiveConnector(BaseConnector):
         authToken = "Bearer {}".format(self._api_key)
         headers = {'Content-Type': 'application/json', 'Authorization': authToken}
         ret_val, response = self._make_rest_call(endpoint, action_result, params=params, data=data, headers=headers,
-                                                    method="post")
+                                                 method="post")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -474,7 +501,8 @@ class ThehiveConnector(BaseConnector):
             fields = json.loads(fields)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
-            return RetVal(action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_FIELDS_JSON_PARSE.format(error=error_msg)), None)
+            return RetVal(action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_FIELDS_JSON_PARSE.format(error=error_msg)),
+                          None)
 
         return RetVal(phantom.APP_SUCCESS, fields)
 
@@ -491,9 +519,10 @@ class ThehiveConnector(BaseConnector):
         endpoint = "api/case/artifact/_search"
         authToken = "Bearer {}".format(self._api_key)
         headers = {'Content-Type': 'application/json', 'Authorization': authToken}
-        data = {"query": { "_parent": { "_type": "case", "_query": { "_id": case_id}}}}
+        data = {"query": {"_parent": {"_type": "case", "_query": {"_id": case_id}}}}
         params = {'range': 'all'}
-        ret_val, response = self._make_rest_call(endpoint, action_result, data=data, params=params, method="post", headers=headers)
+        ret_val, response = self._make_rest_call(endpoint, action_result, data=data, params=params,
+                                                 method="post", headers=headers)
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -535,9 +564,11 @@ class ThehiveConnector(BaseConnector):
             tags = [x.strip() for x in tags.split(',')]
             tags = list(filter(None, tags))
             if not tags:
-                return action_result.set_status(phantom.APP_ERROR, "Tags format invalid. Please supply one or more tags separated by a comma")
-        except:
-            return action_result.set_status(phantom.APP_ERROR, "Tags format invalid. Please supply one or more tags separated by a comma")
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "Tags format invalid. Please supply one or more tags separated by a comma")
+        except Exception:
+            return action_result.set_status(phantom.APP_ERROR,
+                                            "Tags format invalid. Please supply one or more tags separated by a comma")
 
         ioc = param.get('ioc', False)
         data = param.get('data', '')
@@ -561,7 +592,8 @@ class ThehiveConnector(BaseConnector):
                 )
 
             if len(vault_file_info) != 1:
-                return action_result.set_status(phantom.APP_ERROR, "Unable to find specified Vault file. Please check Vault ID and try again.")
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "Unable to find specified Vault file. Please check Vault ID and try again.")
 
             vault_file_info = vault_file_info[0]
             file_path = vault_file_info.get('path')
@@ -584,11 +616,13 @@ class ThehiveConnector(BaseConnector):
         if data_type == 'file':
             data = {"_json": json.dumps(mesg)}
 
-            ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers, data=data, method="post", files=file_data)
+            ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers,
+                                                     data=data, method="post", files=file_data)
         else:
             mesg['data'] = data
             headers['Content-Type'] = 'application/json'
-            ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers, data=mesg, method="post")
+            ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers,
+                                                     data=mesg, method="post")
 
         if phantom.is_fail(ret_val):
             return action_result.get_status()
@@ -628,6 +662,55 @@ class ThehiveConnector(BaseConnector):
         action_result.add_data(response)
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully created task log")
+
+    def _handle_create_alert(self, param):
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        title = param.get('title')
+        alert_type = param.get('alert_type')
+        source = param.get('source')
+        source_ref = param.get('source_ref')
+        description = param.get('description')
+
+        if not (title and alert_type and source and source_ref and description):
+            return action_result.set_status(phantom.APP_ERROR, "Please specify all fields")
+
+        ret_val, severity = self._validate_integer(action_result, param.get('severity', 0), SEVERITY_INTEGER_KEY, allow_zero=True)
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        ret_val, tlp = self._validate_integer(action_result, param.get('tlp', 0), TLP_INTEGER_KEY, allow_zero=True)
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        artifacts = json.loads(param.get('artifacts', "[]"))
+        tags = json.loads(param.get('tags', "[]"))
+
+        data = {
+            'title': title,
+            'type': alert_type,
+            'source': source,
+            'sourceRef': source_ref,
+            'description': description,
+            'severity': severity,
+            'tlp': tlp,
+            'artifacts': artifacts,
+            'tags': tags
+        }
+
+        endpoint = "api/alert"
+        authToken = "Bearer {}".format(self._api_key)
+        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers, data=data, method="post")
+
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        # Add the response into the data section
+        action_result.add_data(response)
+
+        return action_result.set_status(phantom.APP_SUCCESS, "Successfully created alert")
 
     def handle_action(self, param):
 
@@ -674,6 +757,9 @@ class ThehiveConnector(BaseConnector):
         elif action_id == 'create_task_log':
             ret_val = self._handle_create_task_log(param)
 
+        elif action_id == 'create_alert':
+            ret_val = self._handle_create_alert(param)
+
         return ret_val
 
     def initialize(self):
@@ -706,8 +792,9 @@ class ThehiveConnector(BaseConnector):
 
 if __name__ == '__main__':
 
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
@@ -723,13 +810,13 @@ if __name__ == '__main__':
     username = args.username
     password = args.password
 
-    if (username is not None and password is None):
+    if username is not None and password is None:
 
         # User specified a username but not a password, so ask
         import getpass
         password = getpass.getpass("Password: ")
 
-    if (username and password):
+    if username and password:
         try:
             login_url = ThehiveConnector._get_phantom_base_url() + '/login'
             print("Accessing the Login page")
@@ -760,7 +847,7 @@ if __name__ == '__main__':
         connector = ThehiveConnector()
         connector.print_progress_message = True
 
-        if (session_id is not None):
+        if session_id is not None:
             in_json['user_session_token'] = session_id
             connector._set_csrf_info(csrftoken, headers['Referer'])
 
