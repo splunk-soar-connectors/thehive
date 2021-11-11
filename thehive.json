@@ -18,7 +18,7 @@
     "python_version": "3",
     "app_wizard_version": "1.0.0",
     "latest_tested_versions": [
-        "On-prem, Version: 3.0.9, 09/22/2021"
+        "On-prem, Version: 3.0.9, 11/12/2021"
     ],
     "configuration": {
         "base_url": {
