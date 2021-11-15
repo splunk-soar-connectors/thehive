@@ -1,5 +1,4 @@
 # File: thehive_consts.py
-#
 # Copyright (c) 2018-2021 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +22,14 @@ THEHIVE_ERR_INVALID_URL = "Error connecting to server. Invalid URL: '{url}'"
 THEHIVE_ERR_CONNECTION_REFUSED = "Error connecting to server. Connection Refused from the server for '{url}' url."
 THEHIVE_ERR_INVALID_SCHEMA = "Error connecting to server. No connection adapters were found for '{url}' url."
 THEHIVE_ERR_CONNECTING_TO_SERVER = "Error connecting to server. Details: {error}"
-THEHIVE_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format. Resetting the state file with the default format. Please try again."
+THEHIVE_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format." \
+                                 "Resetting the state file with the default format. Please try again."
 THEHIVE_ERR_FIELDS_JSON_PARSE = "Unable to parse the fields parameter into a dictionary. {error}"
 THEHIVE_ERR_INVALID_SEVERITY = "Invalid severity entered. Must be one of: Low, Medium, or High."
 THEHIVE_ERR_INVALID_TLP = "Invalid TLP entered. Must be one of: White, Green, Amber, or Red."
+
+INVALID_INT_ERR_MSG = "Please provide a valid integer value in the {}"
+INVALID_NON_NEG_INT_ERR_MSG = "Please provide a valid non-negative integer value in the {}"
+INVALID_NON_NEG_NON_ZERO_ERR_MSG = "PLease provide a valid non-zero non-negative integer value in the {}"
+SEVERITY_INTEGER_KEY = "'severity' action parameter"
+TLP_INTEGER_KEY = "'tlp' action parameter"
