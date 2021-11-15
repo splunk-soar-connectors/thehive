@@ -676,7 +676,7 @@ class ThehiveConnector(BaseConnector):
         if not (title and alert_type and source and source_ref and description):
             return action_result.set_status(phantom.APP_ERROR, "Please specify all fields")
 
-        ret_val, severity = self._validate_integer(action_result, param.get('severity', 0), SEVERITY_INTEGER_KEY, allow_zero=True)
+        ret_val, severity = self._validate_integer(action_result, param.get('severity'), SEVERITY_INTEGER_KEY, allow_zero=True)
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
