@@ -16,6 +16,7 @@
     "main_module": "thehive_connector.py",
     "min_phantom_version": "4.10.0.40961",
     "python_version": "3",
+    "fips_compliant": true,
     "app_wizard_version": "1.0.0",
     "latest_tested_versions": [
         "On-prem, Version: 3.0.9, 09/22/2021"
