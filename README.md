@@ -2,7 +2,7 @@
 # TheHive
 
 Publisher: Splunk  
-Connector Version: 2\.1\.3  
+Connector Version: 2\.1\.5  
 Product Vendor: TheHive Project  
 Product Name: TheHive  
 Product Version Supported (regex): "\.\*"  
@@ -10,7 +10,7 @@ Minimum Product Version: 4\.10\.0\.40961
 
 This app integrates with an instance of TheHive to perform ticketing actions
 
-[comment]: # " File: readme.md"
+[comment]: # " File: README.md"
 [comment]: # "  Copyright (c) 2018-2022 Splunk Inc."
 [comment]: # ""
 [comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
