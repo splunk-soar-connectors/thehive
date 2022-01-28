@@ -12,6 +12,7 @@
 # the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
+
 THEHIVE_SEVERITY_DICT = {"Low": 1, "Medium": 2, "High": 3}
 THEHIVE_TLP_DICT = {"White": 0, "Green": 1, "Amber": 2, "Red": 3}
 
