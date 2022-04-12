@@ -15,6 +15,7 @@
 #
 #
 import json
+import datetime
 from urllib.parse import quote
 
 import magic
@@ -569,7 +570,11 @@ class ThehiveConnector(BaseConnector):
             # file name is being ignored by Hive. It uses the file_path.
             file_data = {'attachment': (file_name, open(file_path, 'rb'), magic.Magic(mime=True).from_file(file_path))}
 
-        endpoint = "api/case/{0}/artifact".format(case_id)
+        ticketType = param.get('ticketType', 'Ticket')
+        if ticketType == 'Ticket':
+            endpoint = "api/case/{0}/artifact".format(case_id)
+        else:
+            endpoint = "api/alert/{0}/artifact".format(case_id)
         authToken = "Bearer {}".format(self._api_key)
         headers = {'Authorization': authToken}
         mesg = {
@@ -593,6 +598,11 @@ class ThehiveConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
+        # response can be a list, if so extract first entry
+        self.debug_print(f'Response Type:{type(response)} Response: {response}')
+        if type(response) == list:
+            response = response[0]
+        
         # need to flatten hashes if file was uploaded
         if response.get('attachment'):
             hashes = response.get('attachment').get('hashes', [])
@@ -629,6 +639,123 @@ class ThehiveConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully created task log")
 
+    def _handle_create_alert(self, param):
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        data = {}
+        title = param['title']
+        description = param['description']
+        data_type = param['type']
+        source = param['source']
+        sourceRef = param['sourceRef']
+        caseTemplate = param.get('caseTemplate', '')
+
+        data.update({
+            'title': title,
+            'description': description,
+            'type': data_type,
+            'source': source,
+            'sourceRef': sourceRef,
+            'caseTemplate': caseTemplate
+        })
+
+        severity = param.get('severity', 'Medium')
+        try:
+            int_severity = THEHIVE_SEVERITY_DICT[severity]
+        except KeyError:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_SEVERITY)
+        data.update({'severity': int_severity})
+
+        tlp = param.get('tlp', 'Amber')
+        try:
+            int_tlp = THEHIVE_TLP_DICT[tlp]
+        except KeyError:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_TLP)
+        data.update({'tlp': int_tlp})
+        
+        tags = param.get('tags', '')
+        tags = [x.strip() for x in tags.split(',')]
+        tags = list(filter(None, tags))
+        data.update({'tags': tags})
+
+        artifacts = param.get('artifacts', None)
+        if artifacts:
+            try:
+                artifacts_json = json.loads(artifacts)
+                data.update({'artifacts': artifacts_json})
+            except:
+                return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_ARTIFACTS)
+
+        endpoint = 'api/alert/'
+        authToken = "Bearer {}".format(self._api_key)
+        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        ret_val, response = self._make_rest_call(endpoint, action_result, params=None, data=data, headers=headers,
+                                                 method="post")
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        action_result.add_data(response)
+
+        return action_result.set_status(phantom.APP_SUCCESS, "Successfully created alert")
+
+    def _handle_get_alert(self, param):
+
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        alert_id = param['id']
+        # encoding case_id
+        alert_id = quote(alert_id, safe='')
+
+        # make rest call
+        endpoint = "api/alert/{}".format(alert_id)
+        authToken = "Bearer {}".format(self._api_key)
+        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers)
+
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        # Add the response into the data section
+        action_result.add_data(response)
+
+        return action_result.set_status(phantom.APP_SUCCESS, "Successfully fetched alert")
+
+    def _handle_add_ttp(self, param):
+
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        data = {}
+        patternId = param['patternId']
+        tactic = param['tactic']
+        ticket_id = param['id']
+        # Need to specify a time, try using server TZ
+        now = int(datetime.datetime.now().timestamp()*1000)
+        data.update({
+            "caseId": ticket_id,
+            "patternId": patternId,
+            "tactic": tactic,
+            "occurDate": now
+        })        
+        
+        # make rest call
+        endpoint = "api/v1/procedure"
+        authToken = "Bearer {}".format(self._api_key)
+        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        ret_val, response = self._make_rest_call(endpoint, action_result, params=None, data=data, headers=headers,
+                                                 method="post")
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        # Add the response into the data section
+        action_result.add_data(response)
+
+        return action_result.set_status(phantom.APP_SUCCESS, "Successfully added tactic/technique")
+        
     def handle_action(self, param):
 
         ret_val = phantom.APP_SUCCESS
@@ -673,6 +800,15 @@ class ThehiveConnector(BaseConnector):
 
         elif action_id == 'create_task_log':
             ret_val = self._handle_create_task_log(param)
+        
+        elif action_id == 'create_alert':
+            ret_val = self._handle_create_alert(param)
+
+        elif action_id == 'get_alert':
+            ret_val = self._handle_get_alert(param)
+
+        elif action_id == 'add_ttp':
+            ret_val = self._handle_add_ttp(param)
 
         return ret_val
 

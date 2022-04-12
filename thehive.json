@@ -10,7 +10,7 @@
     "product_version_regex": ".*",
     "publisher": "Splunk",
     "license": "Copyright (c) 2018-2022 Splunk Inc.",
-    "app_version": "2.1.5",
+    "app_version": "2.1.5.1",
     "utctime_updated": "2022-01-12T18:04:41.000000Z",
     "package_name": "phantom_thehive",
     "main_module": "thehive_connector.py",
@@ -2247,13 +2247,13 @@
         {
             "action": "create observable",
             "identifier": "create_observable",
-            "description": "Creates an observable for the specified case",
+            "description": "Creates an observable for the specified case/alert",
             "verbose": "If a file is to be attached to this observable, the 'vault_id' parameter must be used.",
             "type": "generic",
             "read_only": false,
             "parameters": {
                 "id": {
-                    "description": "Ticket ID (ex: AWGxGFw138eA2eAzW_e6)",
+                    "description": "Ticket/Alert ID (ex: AWGxGFw138eA2eAzW_e6)",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
@@ -2261,6 +2261,17 @@
                         "thehive ticket id"
                     ],
                     "order": 0
+                },
+                "ticketType": {
+                    "description": "Ticket or Alert",
+                    "data_type": "string",
+                    "value_list": [
+                        "Ticket",
+                        "Alert"
+                    ],
+                    "default": "Ticket",
+                    "required": true,
+                    "order": 1
                 },
                 "data_type": {
                     "description": "Data type of the observable (select one from list)",
@@ -2283,12 +2294,12 @@
                         "url",
                         "user-agent"
                     ],
-                    "order": 1
+                    "order": 2
                 },
                 "data": {
                     "description": "Value of the data for this observable",
                     "data_type": "string",
-                    "order": 2
+                    "order": 3
                 },
                 "tlp": {
                     "description": "TLP (default is Amber)",
@@ -2300,19 +2311,19 @@
                         "White"
                     ],
                     "default": "Amber",
-                    "order": 3
+                    "order": 4
                 },
                 "tags": {
                     "description": "Tags to associate with this observable (can be a comma-separated list)",
                     "data_type": "string",
                     "required": true,
-                    "order": 4
+                    "order": 5
                 },
                 "description": {
                     "description": "Describe the observable in the context of the case",
                     "data_type": "string",
                     "required": true,
-                    "order": 5
+                    "order": 6
                 },
                 "vault_id": {
                     "description": "Vault ID for the file to be attached. Ignored if not 'file' data_type",
@@ -2321,12 +2332,12 @@
                     "contains": [
                         "vault id"
                     ],
-                    "order": 6
+                    "order": 7
                 },
                 "ioc": {
                     "description": "Indicates if this observable is an IOC",
                     "data_type": "boolean",
-                    "order": 7
+                    "order": 8
                 }
             },
             "output": [
@@ -2374,6 +2385,13 @@
                     "data_type": "string",
                     "example_values": [
                         "domain"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ticketType",
+                    "data_type": "string",
+                    "example_values": [
+                        "Ticket"
                     ]
                 },
                 {
@@ -3191,6 +3209,760 @@
                 {
                     "data_path": "action_result.summary",
                     "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "create alert",
+            "identifier": "create_alert",
+            "description": "Create Alert",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "title": {
+                    "description": "Title",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 1
+                },
+                "description": {
+                    "description": "Description",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 2
+                },
+                "severity": {
+                    "description": "Severity of the alert (default is Medium)",
+                    "data_type": "string",
+                    "value_list": [
+                        "Low",
+                        "Medium",
+                        "High"
+                    ],
+                    "default": "Medium",
+                    "order": 3
+                },
+                "tags": {
+                    "description": "Tags to associate with this alert (can be a comma-separated list)",
+                    "data_type": "string",
+                    "required": false,
+                    "order": 4
+                },
+                "tlp": {
+                    "description": "TLP (default is Amber)",
+                    "data_type": "string",
+                    "value_list": [
+                        "White",
+                        "Green",
+                        "Amber",
+                        "Red"
+                    ],
+                    "default": "Amber",
+                    "order": 5
+                },
+                "type": {
+                    "description": "Type of the alert",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 6
+                },
+                "source": {
+                    "description": "Source of the alert",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 7
+                },
+                "sourceRef": {
+                    "description": "Source reference of the alert",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 7
+                },
+                "artifacts": {
+                    "description": "JSON Array containing artifact attributes",
+                    "data_type": "string",
+                    "required": false,
+                    "order": 8
+                },
+                "caseTemplate": {
+                    "description": "Case template to use when case is created from this alert",
+                    "data_type": "string",
+                    "required": false,
+                    "order": 9
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~32800"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~32800"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.case",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.date",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779088305
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "phishing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "internal"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.title",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is a test from App With Observables"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.follow",
+                    "data_type": "numeric",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "Cofense Add-on"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "New"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.severity",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~57520"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~57520"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.ioc",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.data",
+                    "data_type": "string",
+                    "example_values": [
+                        "testuser@splunk.edu"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "Recipient"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "case_artifact"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.sighted",
+                    "data_type": "numeric",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.dataType",
+                    "data_type": "string",
+                    "example_values": [
+                        "mail"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779088314
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.startDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779088314
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779088308
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.sourceRef",
+                    "data_type": "string",
+                    "example_values": [
+                        "2272"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedAt",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.updatedBy",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Alert description text"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.caseTemplate",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.externalLink",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully created task"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.tlp",
+                    "data_type": "string",
+                    "example_values": [
+                        "Amber"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "phishing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "internal"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.title",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is a test from App With Observables"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "Cofense Add-on"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.severity",
+                    "data_type": "string",
+                    "example_values": [
+                        "Medium"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.artifacts",
+                    "data_type": "string",
+                    "example_values": [
+                        "[{\"dataType\":\"mail\",\n        \"tags\":[\"Recipient\"],\n        \"data\":[\"testuser@domain.com\"]}]"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.sourceRef",
+                    "data_type": "string",
+                    "example_values": [
+                        "2272"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Alert description text"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get alert",
+            "identifier": "get_alert",
+            "description": "Get alert information",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "id": {
+                    "description": "Alert ID (~32968)",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "thehive alert id"
+                    ],
+                    "order": 0
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~32968"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~32968"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.case",
+                    "data_type": "string",
+                    "example_values": [
+                        "~37056"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.date",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779406223
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "phishing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "internal"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.title",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is a test from App With Observables"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.follow",
+                    "data_type": "numeric",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "Cofense Add-on"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "Imported"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.severity",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779406227
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.sourceRef",
+                    "data_type": "string",
+                    "example_values": [
+                        "2271"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649783209002
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Example description"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.caseTemplate",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.externalLink",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully fetched alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~32968"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "add ttp",
+            "identifier": "add_ttp",
+            "description": "Add TTP to Case",
+            "type": "investigate",
+            "read_only": false,
+            "parameters": {
+                "id": {
+                    "description": "Case ID (~32968)",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "thehive ticket id"
+                    ],
+                    "order": 0
+                },
+                "patternId": {
+                    "description": "Pattern ID (T1566)",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 1
+                },
+                "tactic": {
+                    "description": "Tactic (short name e.g. initial-access)",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 2
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~376864"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tactic",
+                    "data_type": "string",
+                    "example_values": [
+                        "initial-access"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.occurDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649801935925
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.patternId",
+                    "data_type": "string",
+                    "example_values": [
+                        "T1566"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649801936613
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully added tactic/technique"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~73904"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.tactic",
+                    "data_type": "string",
+                    "example_values": [
+                        "initial-access"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.patternId",
+                    "data_type": "string",
+                    "example_values": [
+                        "T1566"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
