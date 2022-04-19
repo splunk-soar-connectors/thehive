@@ -603,6 +603,12 @@ class ThehiveConnector(BaseConnector):
 
             del response['attachment']['hashes']
 
+        if 'failure' in response:
+            response = response['failure'][0]
+            if response.get('type') and response.get('message'):
+                message = "Error Type: {}. Error Message: {}".format(response.get('type'), response.get('message'))
+                return action_result.set_status(phantom.APP_SUCCESS, message)
+
         action_result.add_data(response)
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully created observable")
