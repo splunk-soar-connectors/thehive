@@ -3384,6 +3384,9 @@
                 {
                     "data_path": "action_result.data.*._id",
                     "data_type": "string",
+                    "contains": [
+                        "thehive alert id"
+                    ],
                     "example_values": [
                         "~32800"
                     ]
@@ -3542,6 +3545,9 @@
                     "data_type": "string",
                     "column_name": "ID",
                     "column_order": 0,
+                    "contains": [
+                        "thehive alert id"
+                    ],
                     "example_values": [
                         "~32800"
                     ]
@@ -3692,6 +3698,9 @@
                 {
                     "data_path": "action_result.data.*._id",
                     "data_type": "string",
+                    "contains": [
+                        "thehive alert id"
+                    ],
                     "example_values": [
                         "~32968"
                     ]
@@ -3763,6 +3772,9 @@
                     "data_type": "string",
                     "column_name": "ID",
                     "column_order": 0,
+                    "contains": [
+                        "thehive alert id"
+                    ],
                     "example_values": [
                         "~32968"
                     ]

@@ -306,6 +306,8 @@ class ThehiveConnector(BaseConnector):
         ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers)
 
         if phantom.is_fail(ret_val):
+            if '404' in action_result.get_message():
+                return action_result.set_status(phantom.APP_SUCCESS, action_result.get_message())
             return action_result.get_status()
 
         # Add the response into the data section
@@ -387,7 +389,13 @@ class ThehiveConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully created task")
 
-    def _handle_search(self, param, path):
+    def _handle_search_task(self, param):
+        self.debug_print("In action handler for: {0}".format(self.get_action_identifier()))
+
+        self.debug_print("Calling search_ticket method to handle search")
+        return self._handle_search_ticket(param, "task")
+
+    def _handle_search_ticket(self, param, path="ticket"):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
         if path == "ticket":
@@ -607,7 +615,7 @@ class ThehiveConnector(BaseConnector):
             response = response['failure'][0]
             if response.get('type') and response.get('message'):
                 message = "Error Type: {}. Error Message: {}".format(response.get('type'), response.get('message'))
-                return action_result.set_status(phantom.APP_SUCCESS, message)
+                return action_result.set_status(phantom.APP_ERROR, message)
 
         action_result.add_data(response)
 
@@ -712,6 +720,8 @@ class ThehiveConnector(BaseConnector):
         ret_val, response = self._make_rest_call(endpoint, action_result, headers=headers)
 
         if phantom.is_fail(ret_val):
+            if '404' in action_result.get_message():
+                return action_result.set_status(phantom.APP_SUCCESS, action_result.get_message())
             return action_result.get_status()
 
         # Add the response into the data section
@@ -778,10 +788,10 @@ class ThehiveConnector(BaseConnector):
             ret_val = self._handle_create_task(param)
 
         elif action_id == 'search_ticket':
-            ret_val = self._handle_search(param, "ticket")
+            ret_val = self._handle_search_ticket(param)
 
         elif action_id == 'search_task':
-            ret_val = self._handle_search(param, "task")
+            ret_val = self._handle_search_task(param)
 
         elif action_id == 'update_task':
             ret_val = self._handle_update_task(param)
