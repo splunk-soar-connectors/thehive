@@ -3954,7 +3954,7 @@
                 {
                     "data_path": "action_result.data.*.description",
                     "data_type": "string",
-                    "column_name": "Title",
+                    "column_name": "Description",
                     "column_order": 2,
                     "example_values": [
                         "Example description"
@@ -4047,7 +4047,7 @@
                 {
                     "data_path": "action_result.data.*.type",
                     "data_type": "string",
-                    "column_name": "Title",
+                    "column_name": "Type",
                     "column_order": 4,
                     "example_values": [
                         "internal"
