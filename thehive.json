@@ -144,7 +144,7 @@
                         "thehive username"
                     ],
                     "example_values": [
-                        "herman.edwards"
+                        "test.user"
                     ]
                 },
                 {
@@ -241,6 +241,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.endDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1542187296341
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.flag",
                     "data_type": "boolean",
                     "example_values": [
@@ -259,6 +266,10 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.impactStatus",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.owner",
                     "data_type": "string",
                     "column_name": "Owner",
@@ -267,8 +278,19 @@
                         "thehive username"
                     ],
                     "example_values": [
-                        "herman.edwards"
+                        "test.user"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.resolutionStatus",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.severity",
@@ -294,6 +316,10 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.summary",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.title",
                     "data_type": "string",
                     "example_values": [
@@ -308,6 +334,17 @@
                     "example_values": [
                         2
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1542289085536
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedBy",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.summary.important_data",
@@ -360,7 +397,7 @@
             "read_only": true,
             "parameters": {
                 "id": {
-                    "description": "Ticket ID (AWGxGFw138eA2eAzW_e6)",
+                    "description": "Ticket ID",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
@@ -523,7 +560,14 @@
                         "thehive username"
                     ],
                     "example_values": [
-                        "herman.edwards"
+                        "test.user"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
                     ]
                 },
                 {
@@ -670,7 +714,7 @@
                     "data_path": "action_result.parameter.fields",
                     "data_type": "string",
                     "example_values": [
-                        "{\"severity\": 1, \"description\": \"Herman, what are you doing\"}"
+                        "{\"severity\": 1, \"description\": \"User, what are you doing\"}"
                     ]
                 },
                 {
@@ -784,7 +828,14 @@
                     "data_path": "action_result.data.*.description",
                     "data_type": "string",
                     "example_values": [
-                        "Herman, what are you doing"
+                        "User, what are you doing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.endDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1542187296341
                     ]
                 },
                 {
@@ -806,11 +857,26 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.impactStatus",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.owner",
                     "data_type": "string",
                     "example_values": [
                         "testUser"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.resolutionStatus",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.severity",
@@ -832,6 +898,10 @@
                     "example_values": [
                         "Open"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.title",
@@ -1105,6 +1175,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.resolutionStatus",
                     "data_type": "string",
                     "example_values": [
@@ -1355,6 +1432,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.group",
+                    "data_type": "string",
+                    "example_values": [
+                        "default"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "contains": [
@@ -1446,7 +1530,7 @@
                     "data_path": "action_result.parameter.search_ticket",
                     "data_type": "string",
                     "example_values": [
-                        "{\"query\": {\"_in\": {\"_field\": \"description\", \"_values\": [\"Herman\"]}}}",
+                        "{\"query\": {\"_in\": {\"_field\": \"description\", \"_values\": [\"User\"]}}}",
                         "{\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}}",
                         "{\"query\": {\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}}",
                         "{\"query\": {\"_lt\": {\"tlp\": 3}}}",
@@ -1575,7 +1659,7 @@
                     "data_path": "action_result.data.*.description",
                     "data_type": "string",
                     "example_values": [
-                        "Herman, what are you doing"
+                        "User, what are you doing"
                     ]
                 },
                 {
@@ -1648,6 +1732,13 @@
                     "column_order": 1,
                     "example_values": [
                         "admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
                     ]
                 },
                 {
@@ -1872,6 +1963,13 @@
                     "example_values": [
                         true,
                         false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.group",
+                    "data_type": "string",
+                    "example_values": [
+                        "default"
                     ]
                 },
                 {
@@ -2152,6 +2250,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.group",
+                    "data_type": "string",
+                    "example_values": [
+                        "default"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "contains": [
@@ -2253,12 +2358,13 @@
             "read_only": false,
             "parameters": {
                 "id": {
-                    "description": "Ticket/Alert ID (ex: AWGxGFw138eA2eAzW_e6)",
+                    "description": "Ticket/Alert ID",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
                     "contains": [
-                        "thehive ticket id"
+                        "thehive ticket id",
+                        "thehive alert id"
                     ],
                     "order": 0
                 },
@@ -2373,7 +2479,8 @@
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
                     "contains": [
-                        "thehive ticket id"
+                        "thehive ticket id",
+                        "thehive alert id"
                     ],
                     "example_values": [
                         "AWQfCdsmt-_WVPphkhQv"
@@ -3323,7 +3430,10 @@
                 },
                 {
                     "data_path": "action_result.parameter.case_template",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "TemplateName"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.description",
@@ -3455,15 +3565,24 @@
                 },
                 {
                     "data_path": "action_result.data.*.artifacts.*.ioc",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
+                        true,
                         false
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.artifacts.*.sighted",
-                    "data_type": "numeric",
+                    "data_path": "action_result.data.*.artifacts.*.message",
+                    "data_type": "string",
                     "example_values": [
+                        "This is example message"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.sighted",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
                         false
                     ]
                 },
@@ -3535,9 +3654,10 @@
                 },
                 {
                     "data_path": "action_result.data.*.follow",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
-                        true
+                        true,
+                        false
                     ]
                 },
                 {
@@ -3713,6 +3833,90 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.artifacts.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~786632"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "case_artifact"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650522468968
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "testuser@domain.local"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.data",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://www.somedomain.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.dataType",
+                    "data_type": "string",
+                    "example_values": [
+                        "domain"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~786632"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.ioc",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is test message"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.sighted",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.startDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650522468968
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.case",
                     "data_type": "string",
                     "example_values": [
@@ -3762,9 +3966,10 @@
                 },
                 {
                     "data_path": "action_result.data.*.follow",
-                    "data_type": "numeric",
+                    "data_type": "boolean",
                     "example_values": [
-                        true
+                        true,
+                        false
                     ]
                 },
                 {
@@ -3920,7 +4125,7 @@
                     "order": 1
                 },
                 "tactic": {
-                    "description": "Tactic (short name e.g. initial-access)",
+                    "description": "Tactic",
                     "data_type": "string",
                     "required": true,
                     "order": 2
