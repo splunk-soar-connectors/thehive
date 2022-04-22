@@ -262,19 +262,19 @@ class ThehiveConnector(BaseConnector):
         description = param['description']
         data.update({'title': title, 'description': description})
 
-        severity = param.get('severity', 'Medium')
         try:
+            severity = param.get('severity', 'Medium')
             int_severity = THEHIVE_SEVERITY_DICT[severity]
+            data.update({'severity': int_severity})
         except KeyError:
             return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_SEVERITY)
-        data.update({'severity': int_severity})
 
-        tlp = param.get('tlp', 'Amber')
         try:
+            tlp = param.get('tlp', 'Amber')
             int_tlp = THEHIVE_TLP_DICT[tlp]
+            data.update({'tlp': int_tlp})
         except KeyError:
             return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_TLP)
-        data.update({'tlp': int_tlp})
 
         if 'owner' in param:
             data.update({'owner': param.get('owner')})
@@ -376,6 +376,8 @@ class ThehiveConnector(BaseConnector):
 
         title = param['title']
         status = param['status']
+        if status not in THEHIVE_STATUS_LIST:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_STATUS)
         data = dict()
         data.update({'title': title, 'status': status})
         endpoint = 'api/case/{}/task'.format(case_id)
@@ -440,6 +442,8 @@ class ThehiveConnector(BaseConnector):
         title = param.get('task_title')
         owner = param.get('task_owner')
         status = param.get('task_status')
+        if status and status not in THEHIVE_STATUS_LIST:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_STATUS)
         description = param.get('task_description')
 
         if title:
@@ -488,6 +492,8 @@ class ThehiveConnector(BaseConnector):
 
         case_id = param.get('ticket_id')
         data_type = param.get('data_type')
+        if data_type and data_type not in THEHIVE_DATA_TYPE_LIST:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_DATA_TYPE)
 
         # make rest call
         endpoint = "api/case/artifact/_search"
@@ -525,6 +531,8 @@ class ThehiveConnector(BaseConnector):
         data = dict()
         case_id = param['id']
         data_type = param['data_type']
+        if data_type not in THEHIVE_DATA_TYPE_LIST:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_DATA_TYPE)
         message = param['description']
         tlp = param.get('tlp', 'Amber')
         try:
@@ -574,8 +582,10 @@ class ThehiveConnector(BaseConnector):
         ticket_type = param.get('ticket_type', 'Ticket')
         if ticket_type == 'Ticket':
             endpoint = "api/case/{0}/artifact".format(case_id)
-        else:
+        elif ticket_type == 'Alert':
             endpoint = "api/alert/{0}/artifact".format(case_id)
+        else:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_TICKET_TYPE)
         headers = {'Authorization': self._auth_token}
         mesg = {
             "dataType": data_type,

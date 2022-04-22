@@ -19,7 +19,7 @@
     "fips_compliant": true,
     "app_wizard_version": "1.0.0",
     "latest_tested_versions": [
-        "On-prem, Version: 4.1.18-1, 18 April, 2022"
+        "On-prem, Version: 4.1.18-1, 22 April, 2022"
     ],
     "configuration": {
         "base_url": {

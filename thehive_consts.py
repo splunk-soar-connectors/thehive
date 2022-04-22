@@ -14,6 +14,24 @@
 # and limitations under the License.
 THEHIVE_SEVERITY_DICT = {"Low": 1, "Medium": 2, "High": 3}
 THEHIVE_TLP_DICT = {"White": 0, "Green": 1, "Amber": 2, "Red": 3}
+THEHIVE_STATUS_LIST = ["Waiting", "InProgress", "Completed", "Cancel"]
+THEHIVE_DATA_TYPE_LIST = [
+    "autonomous-system",
+    "domain",
+    "file",
+    "filename",
+    "fqdn",
+    "hash",
+    "ip",
+    "mail",
+    "mail_subject",
+    "other",
+    "regexp",
+    "registry",
+    "uri_path",
+    "url",
+    "user-agent"
+]
 DEFAULT_TIMEOUT = 30
 
 # Constants relating to 'get_error_message_from_exception'
@@ -29,4 +47,8 @@ THEHIVE_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file du
 THEHIVE_ERR_FIELDS_JSON_PARSE = "Unable to parse the fields parameter into a dictionary. {error}"
 THEHIVE_ERR_INVALID_SEVERITY = "Invalid severity entered. Must be one of: Low, Medium, or High."
 THEHIVE_ERR_INVALID_TLP = "Invalid TLP entered. Must be one of: White, Green, Amber, or Red."
+THEHIVE_ERR_INVALID_STATUS = "Invalid status entered. Must be one of: Waiting, InProgress, Completed, or Cancel."
+THEHIVE_ERR_INVALID_TICKET_TYPE = "Invalid 'ticket type' entered. Must be one of: Ticket or Alert."
+THEHIVE_ERR_INVALID_DATA_TYPE = "Invalid 'data type' entered. Must be one of: autonomous-system, domain, file, filename, fqdn," \
+                                " hash, ip, mail, mail_subject, other, regexp, registry, uri_path, url, or user-agent."
 THEHIVE_ERR_INVALID_ARTIFACTS = "Invalid Artifact JSON entered. Must be a valid JSON list of artifacts"
