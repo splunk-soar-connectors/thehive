@@ -14,8 +14,8 @@
 # and limitations under the License.
 #
 #
-import json
 import datetime
+import json
 from urllib.parse import quote
 
 import magic
@@ -48,7 +48,7 @@ class ThehiveConnector(BaseConnector):
         # modify this as you deem fit.
         self._base_url = None
 
-        self._api_key = None
+        self._auth_token = None
 
     def _get_error_message_from_exception(self, e):
         """
@@ -67,8 +67,8 @@ class ThehiveConnector(BaseConnector):
                     error_msg = e.args[1]
                 elif len(e.args) == 1:
                     error_msg = e.args[0]
-        except:
-            pass
+        except Exception:
+            self.debug_print("Error occurred while fetching exception information")
 
         if not error_code:
             error_text = "Error Message: {}".format(error_msg)
@@ -77,7 +77,7 @@ class ThehiveConnector(BaseConnector):
 
         return error_text
 
-    def _process_empty_reponse(self, response, action_result):
+    def _process_empty_response(self, response, action_result):
 
         if response.status_code == 200:
             return RetVal(phantom.APP_SUCCESS, {})
@@ -101,7 +101,7 @@ class ThehiveConnector(BaseConnector):
             split_lines = error_text.split('\n')
             split_lines = [x.strip() for x in split_lines if x.strip()]
             error_text = '\n'.join(split_lines)
-        except:
+        except Exception:
             error_text = "Cannot parse error details"
 
         message = "Status Code: {0}. Data from server:\n{1}\n".format(status_code,
@@ -117,6 +117,7 @@ class ThehiveConnector(BaseConnector):
         try:
             resp_json = r.json()
         except Exception as e:
+            self.debug_print(self._get_error_message_from_exception(e))
             return RetVal(action_result.set_status(phantom.APP_ERROR, "Unable to parse JSON response. Error: {0}".format(str(e))), None)
 
         # Please specify the status codes here
@@ -134,7 +135,7 @@ class ThehiveConnector(BaseConnector):
             if resp_json.get('errors', [])[0][0].get('message'):
                 message = "Error from server. Status Code: {0} Data from server: {1}".format(
                     r.status_code, resp_json.get('errors', [])[0][0].get('message'))
-        except:
+        except Exception:
             pass
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -161,7 +162,7 @@ class ThehiveConnector(BaseConnector):
 
         # it's not content-type that is to be parsed, handle an empty response
         if not r.text:
-            return self._process_empty_reponse(r, action_result)
+            return self._process_empty_response(r, action_result)
 
         # everything else is actually an error at this point
         message = "Can't process response from server. Status Code: {0} Data from server: {1}".format(
@@ -191,7 +192,8 @@ class ThehiveConnector(BaseConnector):
                             headers=headers,
                             verify=config.get('verify_server_cert', False),
                             params=params,
-                            files=files)
+                            files=files,
+                            timeout=DEFAULT_TIMEOUT)
             else:
                 r = request_func(
                             url,
@@ -199,7 +201,8 @@ class ThehiveConnector(BaseConnector):
                             headers=headers,
                             verify=config.get('verify_server_cert', False),
                             params=params,
-                            files=files)
+                            files=files,
+                            timeout=DEFAULT_TIMEOUT)
         except requests.exceptions.InvalidURL as e:
             self.debug_print(self._get_error_message_from_exception(e))
             return RetVal(action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_URL.format(url=url)), resp_json)
@@ -226,11 +229,9 @@ class ThehiveConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        authToken = "Bearer {}".format(self._api_key)
-
         self.save_progress("Connecting to endpoint")
         # make rest call
-        headers = {'Authorization': authToken}
+        headers = {'Authorization': self._auth_token}
         ret_val, _ = self._make_rest_call('api/case', action_result, params=None, headers=headers)
 
         if phantom.is_fail(ret_val):
@@ -261,26 +262,25 @@ class ThehiveConnector(BaseConnector):
         description = param['description']
         data.update({'title': title, 'description': description})
 
-        severity = param.get('severity', 'Medium')
         try:
+            severity = param.get('severity', 'Medium')
             int_severity = THEHIVE_SEVERITY_DICT[severity]
+            data.update({'severity': int_severity})
         except KeyError:
             return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_SEVERITY)
-        data.update({'severity': int_severity})
 
-        tlp = param.get('tlp', 'Amber')
         try:
+            tlp = param.get('tlp', 'Amber')
             int_tlp = THEHIVE_TLP_DICT[tlp]
+            data.update({'tlp': int_tlp})
         except KeyError:
             return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_TLP)
-        data.update({'tlp': int_tlp})
 
         if 'owner' in param:
             data.update({'owner': param.get('owner')})
 
         # make rest call
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         ret_val, response = self._make_rest_call('api/case', action_result, params=None, data=data, headers=headers, method="post")
 
         if phantom.is_fail(ret_val):
@@ -302,11 +302,12 @@ class ThehiveConnector(BaseConnector):
 
         # make rest call
         endpoint = "api/case/{}".format(case_id)
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers)
 
         if phantom.is_fail(ret_val):
+            if '404' in action_result.get_message():
+                return action_result.set_status(phantom.APP_SUCCESS, action_result.get_message())
             return action_result.get_status()
 
         # Add the response into the data section
@@ -334,8 +335,7 @@ class ThehiveConnector(BaseConnector):
             data.update(fields)
 
         endpoint = "api/case/{}".format(case_id)
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         ret_val, response = self._make_rest_call(endpoint, action_result, data=data, params=None, headers=headers, method="patch")
 
         if phantom.is_fail(ret_val):
@@ -352,8 +352,7 @@ class ThehiveConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Authorization': authToken}
+        headers = {'Authorization': self._auth_token}
         params = {'range': 'all'}
         ret_val, response = self._make_rest_call('api/case', action_result, params=params, headers=headers)
 
@@ -377,11 +376,12 @@ class ThehiveConnector(BaseConnector):
 
         title = param['title']
         status = param['status']
+        if status not in THEHIVE_STATUS_LIST:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_STATUS)
         data = dict()
         data.update({'title': title, 'status': status})
         endpoint = 'api/case/{}/task'.format(case_id)
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         ret_val, response = self._make_rest_call(endpoint, action_result, params=None, data=data, headers=headers,
                                                  method="post")
         if phantom.is_fail(ret_val):
@@ -391,7 +391,13 @@ class ThehiveConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully created task")
 
-    def _handle_search(self, param, path):
+    def _handle_search_task(self, param):
+        self.debug_print("In action handler for: {0}".format(self.get_action_identifier()))
+
+        self.debug_print("Calling search_ticket method to handle search")
+        return self._handle_search_ticket(param, "task")
+
+    def _handle_search_ticket(self, param, path="ticket"):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
         if path == "ticket":
@@ -411,8 +417,7 @@ class ThehiveConnector(BaseConnector):
             error_msg = self._get_error_message_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_FIELDS_JSON_PARSE.format(error=error_msg))
         data.update(search)
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         ret_val, response = self._make_rest_call(endpoint, action_result, params=params, data=data, headers=headers,
                                                     method="post")
 
@@ -437,6 +442,8 @@ class ThehiveConnector(BaseConnector):
         title = param.get('task_title')
         owner = param.get('task_owner')
         status = param.get('task_status')
+        if status and status not in THEHIVE_STATUS_LIST:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_STATUS)
         description = param.get('task_description')
 
         if title:
@@ -449,8 +456,7 @@ class ThehiveConnector(BaseConnector):
             data.update({'description': description})
 
         endpoint = "api/case/task/{}".format(task_id)
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers, data=data, method="patch")
 
         if phantom.is_fail(ret_val):
@@ -486,11 +492,12 @@ class ThehiveConnector(BaseConnector):
 
         case_id = param.get('ticket_id')
         data_type = param.get('data_type')
+        if data_type and data_type not in THEHIVE_DATA_TYPE_LIST:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_DATA_TYPE)
 
         # make rest call
         endpoint = "api/case/artifact/_search"
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         data = {"query": { "_parent": { "_type": "case", "_query": { "_id": case_id}}}}
         params = {'range': 'all'}
         ret_val, response = self._make_rest_call(endpoint, action_result, data=data, params=params, method="post", headers=headers)
@@ -524,6 +531,8 @@ class ThehiveConnector(BaseConnector):
         data = dict()
         case_id = param['id']
         data_type = param['data_type']
+        if data_type not in THEHIVE_DATA_TYPE_LIST:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_DATA_TYPE)
         message = param['description']
         tlp = param.get('tlp', 'Amber')
         try:
@@ -536,7 +545,7 @@ class ThehiveConnector(BaseConnector):
             tags = list(filter(None, tags))
             if not tags:
                 return action_result.set_status(phantom.APP_ERROR, "Tags format invalid. Please supply one or more tags separated by a comma")
-        except:
+        except Exception:
             return action_result.set_status(phantom.APP_ERROR, "Tags format invalid. Please supply one or more tags separated by a comma")
 
         ioc = param.get('ioc', False)
@@ -570,13 +579,14 @@ class ThehiveConnector(BaseConnector):
             # file name is being ignored by Hive. It uses the file_path.
             file_data = {'attachment': (file_name, open(file_path, 'rb'), magic.Magic(mime=True).from_file(file_path))}
 
-        ticketType = param.get('ticketType', 'Ticket')
-        if ticketType == 'Ticket':
+        ticket_type = param.get('ticket_type', 'Ticket')
+        if ticket_type == 'Ticket':
             endpoint = "api/case/{0}/artifact".format(case_id)
-        else:
+        elif ticket_type == 'Alert':
             endpoint = "api/alert/{0}/artifact".format(case_id)
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Authorization': authToken}
+        else:
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_TICKET_TYPE)
+        headers = {'Authorization': self._auth_token}
         mesg = {
             "dataType": data_type,
             "message": message,
@@ -599,10 +609,9 @@ class ThehiveConnector(BaseConnector):
             return action_result.get_status()
 
         # response can be a list, if so extract first entry
-        self.debug_print(f'Response Type:{type(response)} Response: {response}')
-        if type(response) == list:
+        if isinstance(response, list):
             response = response[0]
-        
+
         # need to flatten hashes if file was uploaded
         if response.get('attachment'):
             hashes = response.get('attachment').get('hashes', [])
@@ -611,6 +620,12 @@ class ThehiveConnector(BaseConnector):
             response['attachment']['md5'] = hashes[2]
 
             del response['attachment']['hashes']
+
+        if 'failure' in response:
+            response = response['failure'][0]
+            if response.get('type') and response.get('message'):
+                message = "Error Type: {}. Error Message: {}".format(response.get('type'), response.get('message'))
+                return action_result.set_status(phantom.APP_ERROR, message)
 
         action_result.add_data(response)
 
@@ -628,8 +643,7 @@ class ThehiveConnector(BaseConnector):
         data = dict()
         data.update({'message': message})
         endpoint = 'api/case/task/{}/log'.format(task_id)
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         ret_val, response = self._make_rest_call(endpoint, action_result, params=None, data=data, headers=headers,
                                                  method="post")
         if phantom.is_fail(ret_val):
@@ -648,53 +662,54 @@ class ThehiveConnector(BaseConnector):
         description = param['description']
         data_type = param['type']
         source = param['source']
-        sourceRef = param['sourceRef']
-        caseTemplate = param.get('caseTemplate', '')
+        source_ref = param['source_ref']
+        case_template = param.get('case_template', '')
 
         data.update({
             'title': title,
             'description': description,
             'type': data_type,
             'source': source,
-            'sourceRef': sourceRef,
-            'caseTemplate': caseTemplate
+            'sourceRef': source_ref,
+            'caseTemplate': case_template
         })
 
-        severity = param.get('severity', 'Medium')
         try:
+            severity = param.get('severity', 'Medium')
             int_severity = THEHIVE_SEVERITY_DICT[severity]
+            data.update({'severity': int_severity})
         except KeyError:
             return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_SEVERITY)
-        data.update({'severity': int_severity})
 
-        tlp = param.get('tlp', 'Amber')
         try:
+            tlp = param.get('tlp', 'Amber')
             int_tlp = THEHIVE_TLP_DICT[tlp]
+            data.update({'tlp': int_tlp})
         except KeyError:
             return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_TLP)
-        data.update({'tlp': int_tlp})
-        
+
         tags = param.get('tags', '')
         tags = [x.strip() for x in tags.split(',')]
         tags = list(filter(None, tags))
         data.update({'tags': tags})
 
-        artifacts = param.get('artifacts', None)
+        artifacts = param.get('artifacts')
         if artifacts:
             try:
                 artifacts_json = json.loads(artifacts)
+                if not isinstance(artifacts_json, list):
+                    return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_ARTIFACTS)
                 data.update({'artifacts': artifacts_json})
-            except:
+            except Exception:
                 return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_ARTIFACTS)
 
         endpoint = 'api/alert/'
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
-        ret_val, response = self._make_rest_call(endpoint, action_result, params=None, data=data, headers=headers,
-                                                 method="post")
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
+        ret_val, response = self._make_rest_call(endpoint, action_result, data=data, headers=headers, method="post")
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
+        # Add the response into the data section
         action_result.add_data(response)
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully created alert")
@@ -711,11 +726,12 @@ class ThehiveConnector(BaseConnector):
 
         # make rest call
         endpoint = "api/alert/{}".format(alert_id)
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
-        ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers)
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
+        ret_val, response = self._make_rest_call(endpoint, action_result, headers=headers)
 
         if phantom.is_fail(ret_val):
+            if '404' in action_result.get_message():
+                return action_result.set_status(phantom.APP_SUCCESS, action_result.get_message())
             return action_result.get_status()
 
         # Add the response into the data section
@@ -730,24 +746,22 @@ class ThehiveConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         data = {}
-        patternId = param['patternId']
+        pattern_id = param['pattern_id']
         tactic = param['tactic']
         ticket_id = param['id']
         # Need to specify a time, try using server TZ
-        now = int(datetime.datetime.now().timestamp()*1000)
+        now = int(datetime.datetime.now().timestamp() * 1000)
         data.update({
             "caseId": ticket_id,
-            "patternId": patternId,
+            "patternId": pattern_id,
             "tactic": tactic,
             "occurDate": now
-        })        
-        
+        })
+
         # make rest call
         endpoint = "api/v1/procedure"
-        authToken = "Bearer {}".format(self._api_key)
-        headers = {'Content-Type': 'application/json', 'Authorization': authToken}
-        ret_val, response = self._make_rest_call(endpoint, action_result, params=None, data=data, headers=headers,
-                                                 method="post")
+        headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
+        ret_val, response = self._make_rest_call(endpoint, action_result, data=data, headers=headers, method="post")
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
@@ -755,7 +769,7 @@ class ThehiveConnector(BaseConnector):
         action_result.add_data(response)
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully added tactic/technique")
-        
+
     def handle_action(self, param):
 
         ret_val = phantom.APP_SUCCESS
@@ -784,10 +798,10 @@ class ThehiveConnector(BaseConnector):
             ret_val = self._handle_create_task(param)
 
         elif action_id == 'search_ticket':
-            ret_val = self._handle_search(param, "ticket")
+            ret_val = self._handle_search_ticket(param)
 
         elif action_id == 'search_task':
-            ret_val = self._handle_search(param, "task")
+            ret_val = self._handle_search_task(param)
 
         elif action_id == 'update_task':
             ret_val = self._handle_update_task(param)
@@ -800,7 +814,7 @@ class ThehiveConnector(BaseConnector):
 
         elif action_id == 'create_task_log':
             ret_val = self._handle_create_task_log(param)
-        
+
         elif action_id == 'create_alert':
             ret_val = self._handle_create_alert(param)
 
@@ -829,7 +843,7 @@ class ThehiveConnector(BaseConnector):
         if not self._base_url.endswith('/'):
             self._base_url = "{}/".format(self._base_url)
 
-        self._api_key = config['api_key']
+        self._auth_token = "Bearer {}".format(config['api_key'])
 
         return phantom.APP_SUCCESS
 
@@ -843,6 +857,7 @@ class ThehiveConnector(BaseConnector):
 if __name__ == '__main__':
 
     import argparse
+    import sys
 
     import pudb
 
@@ -853,12 +868,14 @@ if __name__ == '__main__':
     argparser.add_argument('input_test_json', help='Input Test JSON file')
     argparser.add_argument('-u', '--username', help='username', required=False)
     argparser.add_argument('-p', '--password', help='password', required=False)
+    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
 
     username = args.username
     password = args.password
+    verify = args.verify
 
     if (username is not None and password is None):
 
@@ -868,9 +885,9 @@ if __name__ == '__main__':
 
     if (username and password):
         try:
-            login_url = ThehiveConnector._get_phantom_base_url() + '/login'
+            login_url = '{}login'.format(BaseConnector._get_phantom_base_url())
             print("Accessing the Login page")
-            r = requests.get(login_url, verify=False)
+            r = requests.get(login_url, verify=verify, timeout=DEFAULT_TIMEOUT)
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -879,15 +896,15 @@ if __name__ == '__main__':
             data['csrfmiddlewaretoken'] = csrftoken
 
             headers = dict()
-            headers['Cookie'] = 'csrftoken=' + csrftoken
+            headers['Cookie'] = 'csrftoken={}'.format(csrftoken)
             headers['Referer'] = login_url
 
             print("Logging into Platform to get the session id")
-            r2 = requests.post(login_url, verify=False, data=data, headers=headers)
+            r2 = requests.post(login_url, verify=verify, data=data, headers=headers, timeout=DEFAULT_TIMEOUT)
             session_id = r2.cookies['sessionid']
         except Exception as e:
-            print("Unable to get session id from the platform. Error: " + str(e))
-            exit(1)
+            print("Unable to get session id from the platform. Error: {}".format(str(e)))
+            sys.exit(1)
 
     with open(args.input_test_json) as f:
         in_json = f.read()
@@ -904,4 +921,4 @@ if __name__ == '__main__':
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
 
-    exit(0)
+    sys.exit(0)
