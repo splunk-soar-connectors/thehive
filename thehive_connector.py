@@ -16,6 +16,7 @@
 #
 import datetime
 import json
+import os
 from urllib.parse import quote
 
 import magic
@@ -367,6 +368,27 @@ class ThehiveConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
+    def _handle_list_alerts(self, param):
+
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        headers = {'Authorization': self._auth_token}
+        params = {'range': 'all'}
+        ret_val, response = self._make_rest_call('api/alert', action_result, params=params, headers=headers)
+
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        for alert in response:
+            action_result.add_data(alert)
+
+        summary = action_result.set_summary({})
+        summary['num_alerts'] = len(response)
+
+        return action_result.set_status(phantom.APP_SUCCESS)
+
     def _handle_create_task(self, param):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -533,7 +555,7 @@ class ThehiveConnector(BaseConnector):
         data_type = param['data_type']
         if data_type not in THEHIVE_DATA_TYPE_LIST:
             return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_DATA_TYPE)
-        message = param['description']
+        message = param.get('description')
         tlp = param.get('tlp', 'Amber')
         try:
             int_tlp = THEHIVE_TLP_DICT[tlp]
@@ -543,8 +565,6 @@ class ThehiveConnector(BaseConnector):
         try:
             tags = [x.strip() for x in tags.split(',')]
             tags = list(filter(None, tags))
-            if not tags:
-                return action_result.set_status(phantom.APP_ERROR, "Tags format invalid. Please supply one or more tags separated by a comma")
         except Exception:
             return action_result.set_status(phantom.APP_ERROR, "Tags format invalid. Please supply one or more tags separated by a comma")
 
@@ -578,6 +598,9 @@ class ThehiveConnector(BaseConnector):
 
             # file name is being ignored by Hive. It uses the file_path.
             file_data = {'attachment': (file_name, open(file_path, 'rb'), magic.Magic(mime=True).from_file(file_path))}
+        else:
+            if not data:
+                return action_result.set_status(phantom.APP_ERROR, "Parameter 'data' is mandatory if 'data_type' is not file")
 
         ticket_type = param.get('ticket_type', 'Ticket')
         if ticket_type == 'Ticket':
@@ -589,11 +612,15 @@ class ThehiveConnector(BaseConnector):
         headers = {'Authorization': self._auth_token}
         mesg = {
             "dataType": data_type,
-            "message": message,
             "tlp": int_tlp,
-            "tags": tags,
-            "ioc": ioc
+            "ioc": ioc,
+            "sighted": param.get('sighted', False),
+            "ignoreSimilarity": param.get('ignore_similarity', False)
         }
+        if message:
+            mesg['message'] = message
+        if tags:
+            mesg["tags"] = tags
 
         if data_type == 'file':
             data = {"_json": json.dumps(mesg)}
@@ -744,19 +771,35 @@ class ThehiveConnector(BaseConnector):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
         action_result = self.add_action_result(ActionResult(dict(param)))
+        config = self.get_config()
 
         data = {}
         pattern_id = param['pattern_id']
-        tactic = param['tactic']
         ticket_id = param['id']
-        # Need to specify a time, try using server TZ
-        now = int(datetime.datetime.now().timestamp() * 1000)
+
+        tactic = param['tactic']
+        if tactic not in THEHIVE_TACTIC_LIST:
+            return action_result.set_status(phantom.APP_ERROR, "Please provide valid value for the 'tactic' parameter")
+
+        os.environ['TZ'] = config.get('timezone', 'UTC')
+
+        if param.get('occur_date'):
+            try:
+                date_time_obj = datetime.datetime.strptime(param.get('occur_date'), '%m/%d/%y %H:%M')
+            except Exception:
+                return action_result.set_status(phantom.APP_ERROR, "Please provide a valid date in the 'occur_date' parameter")
+        else:
+            date_time_obj = datetime.datetime.now()
+
         data.update({
             "caseId": ticket_id,
             "patternId": pattern_id,
             "tactic": tactic,
-            "occurDate": now
+            "occurDate": int(date_time_obj.timestamp() * 1000)
         })
+
+        if param.get('description'):
+            data['description'] = param['description']
 
         # make rest call
         endpoint = "api/v1/procedure"
@@ -793,6 +836,9 @@ class ThehiveConnector(BaseConnector):
 
         elif action_id == 'list_tickets':
             ret_val = self._handle_list_tickets(param)
+
+        elif action_id == 'list_alerts':
+            ret_val = self._handle_list_alerts(param)
 
         elif action_id == 'create_task':
             ret_val = self._handle_create_task(param)

@@ -19,7 +19,7 @@
     "fips_compliant": true,
     "app_wizard_version": "1.0.0",
     "latest_tested_versions": [
-        "On-prem, Version: 4.1.18-1, 22 April, 2022"
+        "On-prem, Version: 4.1.18-1, 16 May, 2022"
     ],
     "configuration": {
         "base_url": {
@@ -39,6 +39,12 @@
             "data_type": "boolean",
             "default": false,
             "order": 1
+        },
+        "timezone": {
+            "description": "Timezone (default: UTC)",
+            "data_type": "timezone",
+            "default": "UTC",
+            "order": 3
         }
     },
     "actions": [
@@ -1296,6 +1302,347 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "list alerts",
+            "identifier": "list_alerts",
+            "description": "List all alerts",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {},
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~557296"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~651296"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "case_artifact"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.contentType",
+                    "data_type": "string",
+                    "example_values": [
+                        "application/zip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.hashes",
+                    "data_type": "string",
+                    "example_values": [
+                        "c2b8d2623a1fd062a898615015583ce9"
+                    ],
+                    "contains": [
+                        "md5"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "1fcadb1293968b037bb0de3a8a6e8368cdf8ab7ab9718023abaa14d2a41f501b"
+                    ],
+                    "contains": [
+                        "sha256"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "file_name.apk"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.size",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1434318
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650452201934
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "adminuser@thehive.local"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.data",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.1.19.195"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.dataType",
+                    "data_type": "string",
+                    "example_values": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~651296"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.ioc",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test artifact message"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.sighted",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.startDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650452201934
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "domain"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.case",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.caseTemplate",
+                    "data_type": "string",
+                    "example_values": [
+                        "TestCaseTemplateName"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650451922582
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "adminuser@thehive.local"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.date",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650451922577
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Alert description"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.externalLink",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.follow",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~557296"
+                    ],
+                    "column_name": "Alert ID",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.severity",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ],
+                    "column_name": "Severity",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test App"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.sourceRef",
+                    "data_type": "string",
+                    "example_values": [
+                        "test_source_ref"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "New"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "alert-automation"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.title",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test Alert title"
+                    ],
+                    "column_name": "Title",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        3
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test Event"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedAt",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.updatedBy",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.num_alerts",
+                    "data_type": "numeric",
+                    "example_values": [
+                        12
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Num alerts: 12"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
             "action": "create task",
             "identifier": "create_task",
             "description": "Create Task",
@@ -2421,13 +2768,11 @@
                 "tags": {
                     "description": "Tags to associate with this observable (can be a comma-separated list)",
                     "data_type": "string",
-                    "required": true,
                     "order": 5
                 },
                 "description": {
                     "description": "Describe the observable in the context of the case",
                     "data_type": "string",
-                    "required": true,
                     "order": 6
                 },
                 "vault_id": {
@@ -2443,6 +2788,16 @@
                     "description": "Indicates if this observable is an IOC",
                     "data_type": "boolean",
                     "order": 8
+                },
+                "sighted": {
+                    "description": "Indicates if this observable was sighted",
+                    "data_type": "boolean",
+                    "order": 9
+                },
+                "ignore_similarity": {
+                    "description": "Indicates if this observable should be used or not to calculate the similarity stats",
+                    "data_type": "boolean",
+                    "order": 10
                 }
             },
             "output": [
@@ -2487,7 +2842,23 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.parameter.ignore_similarity",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false,
+                        true
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.ioc",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false,
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.sighted",
                     "data_type": "boolean",
                     "example_values": [
                         false,
@@ -3288,7 +3659,7 @@
                     "data_path": "action_result.data.*.owner",
                     "data_type": "string",
                     "example_values": [
-                        "phantom"
+                        "username"
                     ]
                 },
                 {
@@ -3543,7 +3914,7 @@
                     "data_path": "action_result.data.*.artifacts.*.data",
                     "data_type": "string",
                     "example_values": [
-                        "testuser@splunk.edu"
+                        "testuser@domain.edu"
                     ],
                     "contains": [
                         "email"
@@ -4118,17 +4489,48 @@
                     ],
                     "order": 0
                 },
-                "pattern_id": {
-                    "description": "Pattern ID",
-                    "data_type": "string",
-                    "required": true,
+                "ph": {
+                    "description": "Placeholder",
+                    "data_type": "ph",
                     "order": 1
                 },
                 "tactic": {
                     "description": "Tactic",
                     "data_type": "string",
+                    "value_list": [
+                        "reconnaissance",
+                        "resource-development",
+                        "initial-access",
+                        "execution",
+                        "persistence",
+                        "privilege-escalation",
+                        "defense-evasion",
+                        "credential-access",
+                        "discovery",
+                        "lateral-movement",
+                        "collection",
+                        "command-and-control",
+                        "exfiltration",
+                        "impact"
+                    ],
                     "required": true,
                     "order": 2
+                },
+                "pattern_id": {
+                    "description": "Pattern ID (Technique)",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 3
+                },
+                "occur_date": {
+                    "description": "Occur Date (format mm/dd/yy HH:MM)",
+                    "data_type": "string",
+                    "order": 4
+                },
+                "description": {
+                    "description": "Procedure",
+                    "data_type": "string",
+                    "order": 5
                 }
             },
             "output": [
@@ -4141,6 +4543,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.parameter.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test procedure"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
                     "example_values": [
@@ -4148,6 +4557,13 @@
                     ],
                     "contains": [
                         "thehive ticket id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.occur_date",
+                    "data_type": "string",
+                    "example_values": [
+                        "4/17/22 11:20"
                     ]
                 },
                 {
@@ -4188,6 +4604,13 @@
                     "column_order": 0,
                     "example_values": [
                         "~376864"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test Procedure"
                     ]
                 },
                 {

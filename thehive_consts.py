@@ -32,6 +32,22 @@ THEHIVE_DATA_TYPE_LIST = [
     "url",
     "user-agent"
 ]
+THEHIVE_TACTIC_LIST = [
+    "reconnaissance",
+    "resource-development",
+    "initial-access",
+    "execution",
+    "persistence",
+    "privilege-escalation",
+    "defense-evasion",
+    "credential-access",
+    "discovery",
+    "lateral-movement",
+    "collection",
+    "command-and-control",
+    "exfiltration",
+    "impact"
+]
 DEFAULT_TIMEOUT = 30
 
 # Constants relating to 'get_error_message_from_exception'
