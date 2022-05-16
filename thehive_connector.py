@@ -799,7 +799,7 @@ class ThehiveConnector(BaseConnector):
         })
 
         if param.get('description'):
-            data['description'] = param['description']
+            data['description'] = param.get('description')
 
         # make rest call
         endpoint = "api/v1/procedure"

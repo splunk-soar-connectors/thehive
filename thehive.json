@@ -1322,6 +1322,9 @@
                     "data_type": "string",
                     "example_values": [
                         "~557296"
+                    ],
+                    "contains": [
+                        "thehive alert id"
                     ]
                 },
                 {
@@ -1528,8 +1531,9 @@
                     "example_values": [
                         "~557296"
                     ],
-                    "column_name": "Alert ID",
-                    "column_order": 0
+                    "contains": [
+                        "thehive alert id"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.pap",
@@ -1543,9 +1547,7 @@
                     "data_type": "numeric",
                     "example_values": [
                         2
-                    ],
-                    "column_name": "Severity",
-                    "column_order": 1
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.source",
@@ -1566,9 +1568,7 @@
                     "data_type": "string",
                     "example_values": [
                         "New"
-                    ],
-                    "column_name": "Status",
-                    "column_order": 2
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.tags",
@@ -1582,9 +1582,7 @@
                     "data_type": "string",
                     "example_values": [
                         "Test Alert title"
-                    ],
-                    "column_name": "Title",
-                    "column_order": 3
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.tlp",
@@ -1638,7 +1636,8 @@
                 }
             ],
             "render": {
-                "type": "table"
+                "type": "custom",
+                "view": "thehive_view.display_custom_view"
             },
             "versions": "EQ(*)"
         },
@@ -3516,7 +3515,7 @@
             ],
             "render": {
                 "type": "custom",
-                "view": "thehive_view.display_get_observables"
+                "view": "thehive_view.display_custom_view"
             },
             "versions": "EQ(*)"
         },

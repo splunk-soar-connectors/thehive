@@ -30,7 +30,7 @@ def get_ctx_result(result):
     return ctx_result
 
 
-def display_get_observables(provides, all_app_runs, context):
+def display_custom_view(provides, all_app_runs, context):
 
     context['results'] = results = []
     for summary, action_results in all_app_runs:
@@ -40,5 +40,8 @@ def display_get_observables(provides, all_app_runs, context):
             if not ctx_result:
                 continue
             results.append(ctx_result)
+
+    if provides == 'list alerts':
+        return 'thehive_list_alerts.html'
 
     return 'thehive_display_get_observables.html'
