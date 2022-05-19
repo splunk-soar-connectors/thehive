@@ -785,7 +785,7 @@ class ThehiveConnector(BaseConnector):
 
         if param.get('occur_date'):
             try:
-                date_time_obj = datetime.datetime.strptime(param.get('occur_date'), '%m/%d/%y %H:%M')
+                date_time_obj = datetime.datetime.strptime(param.get('occur_date'), '%d-%m-%Y %H:%M')
             except Exception:
                 return action_result.set_status(phantom.APP_ERROR, "Please provide a valid date in the 'occur_date' parameter")
         else:

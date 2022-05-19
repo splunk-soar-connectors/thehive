@@ -4522,7 +4522,7 @@
                     "order": 3
                 },
                 "occur_date": {
-                    "description": "Occur Date (format mm/dd/yy HH:MM)",
+                    "description": "Occur Date (format: dd-mm-YYYY HH:MM)",
                     "data_type": "string",
                     "order": 4
                 },
@@ -4562,7 +4562,7 @@
                     "data_path": "action_result.parameter.occur_date",
                     "data_type": "string",
                     "example_values": [
-                        "4/17/22 11:20"
+                        "17-04-2022 11:20"
                     ]
                 },
                 {
