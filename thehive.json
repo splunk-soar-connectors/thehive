@@ -4522,7 +4522,7 @@
                     "order": 3
                 },
                 "occur_date": {
-                    "description": "Occur Date (format: dd-mm-YYYY HH:MM)",
+                    "description": "Occur Date (format: DD-MM-YYYY hh:mm)",
                     "data_type": "string",
                     "order": 4
                 },
