@@ -787,7 +787,10 @@ class ThehiveConnector(BaseConnector):
             try:
                 date_time_obj = datetime.datetime.strptime(param.get('occur_date'), '%d-%m-%Y %H:%M')
             except Exception:
-                return action_result.set_status(phantom.APP_ERROR, "Please provide a valid date in the 'occur_date' parameter, supported format: DD-MM-YYYY hh:mm")
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    "Please provide a valid date in the 'occur_date' parameter, supported format: DD-MM-YYYY hh:mm"
+                )
         else:
             date_time_obj = datetime.datetime.now()
 
