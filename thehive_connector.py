@@ -249,7 +249,6 @@ class ThehiveConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         data = dict()
-        fields = dict()
 
         ret_val, fields = self._get_fields(param, action_result)
 
@@ -307,6 +306,7 @@ class ThehiveConnector(BaseConnector):
         ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers)
 
         if phantom.is_fail(ret_val):
+            # Return the success with proper error message if the ticket is not found
             if '404' in action_result.get_message():
                 return action_result.set_status(phantom.APP_SUCCESS, action_result.get_message())
             return action_result.get_status()
@@ -322,7 +322,6 @@ class ThehiveConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
         data = dict()
-        fields = dict()
         case_id = param['id']
         # encoding case_id
         case_id = quote(case_id, safe='')
@@ -635,6 +634,10 @@ class ThehiveConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
+        # If API call succeeds and returns an empty response
+        if not response:
+            return action_result.set_status(phantom.APP_ERROR, "The API returned an empty response")
+
         # response can be a list, if so extract first entry
         if isinstance(response, list):
             response = response[0]
@@ -650,9 +653,11 @@ class ThehiveConnector(BaseConnector):
 
         if 'failure' in response:
             response = response['failure'][0]
-            if response.get('type') and response.get('message'):
-                message = "Error Type: {}. Error Message: {}".format(response.get('type'), response.get('message'))
-                return action_result.set_status(phantom.APP_ERROR, message)
+            message = "Error Type: {}. Error Message: {}".format(
+                response.get('type', "Unknown"),
+                response.get('message', "Unknown error occurred")
+            )
+            return action_result.set_status(phantom.APP_ERROR, message)
 
         action_result.add_data(response)
 
@@ -757,6 +762,7 @@ class ThehiveConnector(BaseConnector):
         ret_val, response = self._make_rest_call(endpoint, action_result, headers=headers)
 
         if phantom.is_fail(ret_val):
+            # Return the success with proper error message if the alert is not found
             if '404' in action_result.get_message():
                 return action_result.set_status(phantom.APP_SUCCESS, action_result.get_message())
             return action_result.get_status()

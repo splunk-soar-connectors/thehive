@@ -19,7 +19,7 @@
     "fips_compliant": true,
     "app_wizard_version": "1.0.0",
     "latest_tested_versions": [
-        "On-prem, Version: 4.1.18-1, 16 May, 2022"
+        "On-prem, Version: 4.1.18-1, 27 May, 2022"
     ],
     "configuration": {
         "base_url": {
@@ -370,9 +370,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Successfully created a new case",
-                        "Invalid severity entered. Must be one of: Low, Medium, or High.",
-                        "Invalid TLP entered. Must be one of: White, Green, Amber, or Red."
+                        "Successfully created a new case"
                     ]
                 },
                 {
@@ -1852,7 +1850,7 @@
             "action": "search ticket",
             "identifier": "search_ticket",
             "description": "Search ticket",
-            "verbose": "For example, {\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"bill\"]}}}<br>Note: \"_values\" field should be in lowercase only.",
+            "verbose": "For example, {\"_in\": {\"_field\": \"title\", \"_values\": [\"bill\"]}}<br>Note: \"_values\" field should be in lowercase only.",
             "type": "generic",
             "read_only": false,
             "parameters": {
@@ -1876,11 +1874,9 @@
                     "data_path": "action_result.parameter.search_ticket",
                     "data_type": "string",
                     "example_values": [
-                        "{\"query\": {\"_in\": {\"_field\": \"description\", \"_values\": [\"User\"]}}}",
-                        "{\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}}",
-                        "{\"query\": {\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}}",
-                        "{\"query\": {\"_lt\": {\"tlp\": 3}}}",
-                        "{\"query\": {\"_not\": {\"_field\": \"owner\",\"_value\": \"admin\"}}}"
+                        "{\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}",
+                        "{\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}",
+                        "{\"_lt\": {\"tlp\": 3}}"
                     ]
                 },
                 {
@@ -2201,7 +2197,7 @@
             "action": "search task",
             "identifier": "search_task",
             "description": "Search task",
-            "verbose": "For example, {\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"bill\"]}}}<br>Note: \"_values\" field should be in lowercase only.",
+            "verbose": "For example, {\"_in\": {\"_field\": \"title\", \"_values\": [\"bill\"]}}<br>Note: \"_values\" field should be in lowercase only.",
             "type": "generic",
             "read_only": false,
             "parameters": {
@@ -2225,11 +2221,9 @@
                     "data_path": "action_result.parameter.search_task",
                     "data_type": "string",
                     "example_values": [
-                        "{\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"moose\"]}}}",
-                        "{\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}}",
-                        "{\"query\": {\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}}",
-                        "{\"query\": {\"_lt\": {\"tlp\": 3}}}",
-                        "{\"query\": {\"_not\": {\"_field\": \"owner\",\"_value\": \"admin\"}}}"
+                        "{\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}",
+                        "{\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}",
+                        "{\"_lt\": {\"tlp\": 3}}"
                     ]
                 },
                 {
@@ -2639,7 +2633,6 @@
                     "data_path": "action_result.data.*.status",
                     "data_type": "string",
                     "example_values": [
-                        "Completed",
                         "InProgress"
                     ]
                 },
@@ -2899,7 +2892,6 @@
                     "data_path": "action_result.data.*._id",
                     "data_type": "string",
                     "example_values": [
-                        "6ecf393fd38eebe6bdff0384c4b1e4d7",
                         "2e441ebe9994d5f6500454fbc10e148c"
                     ],
                     "contains": [
@@ -3024,7 +3016,6 @@
                     "data_path": "action_result.data.*.dataType",
                     "data_type": "string",
                     "example_values": [
-                        "file",
                         "domain"
                     ],
                     "column_order": 2,
@@ -3038,7 +3029,6 @@
                         "md5"
                     ],
                     "example_values": [
-                        "6ecf393fd38eebe6bdff0384c4b1e4d7",
                         "2e441ebe9994d5f6500454fbc10e148c"
                     ],
                     "column_order": 0,
@@ -3216,7 +3206,6 @@
                     "data_path": "action_result.data.*._id",
                     "data_type": "string",
                     "example_values": [
-                        "1e3ca6553ce39d7e02bd33d810bc146f",
                         "c898f24d96ecbbce9506f1b5260cf5bb"
                     ],
                     "contains": [
@@ -3357,10 +3346,7 @@
                     "data_path": "action_result.data.*.dataType",
                     "data_type": "string",
                     "example_values": [
-                        "ip",
-                        "fqdn",
-                        "domain",
-                        "file"
+                        "domain"
                     ]
                 },
                 {
@@ -3451,7 +3437,6 @@
                     "data_path": "action_result.data.*.status",
                     "data_type": "string",
                     "example_values": [
-                        "Ok",
                         "Deleted"
                     ]
                 },
@@ -3459,17 +3444,13 @@
                     "data_path": "action_result.data.*.tags",
                     "data_type": "string",
                     "example_values": [
-                        "malicious",
-                        "domain",
-                        "file",
-                        "mail"
+                        "domain"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.tlp",
                     "data_type": "numeric",
                     "example_values": [
-                        2,
                         3
                     ]
                 },

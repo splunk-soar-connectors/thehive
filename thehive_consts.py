@@ -14,8 +14,8 @@
 # and limitations under the License.
 THEHIVE_SEVERITY_DICT = {"Low": 1, "Medium": 2, "High": 3}
 THEHIVE_TLP_DICT = {"White": 0, "Green": 1, "Amber": 2, "Red": 3}
-THEHIVE_STATUS_LIST = ["Waiting", "InProgress", "Completed", "Cancel"]
-THEHIVE_DATA_TYPE_LIST = [
+THEHIVE_STATUS_LIST = {"Waiting", "InProgress", "Completed", "Cancel"}
+THEHIVE_DATA_TYPE_LIST = {
     "autonomous-system",
     "domain",
     "file",
@@ -31,8 +31,8 @@ THEHIVE_DATA_TYPE_LIST = [
     "uri_path",
     "url",
     "user-agent"
-]
-THEHIVE_TACTIC_LIST = [
+}
+THEHIVE_TACTIC_LIST = {
     "reconnaissance",
     "resource-development",
     "initial-access",
@@ -47,7 +47,7 @@ THEHIVE_TACTIC_LIST = [
     "command-and-control",
     "exfiltration",
     "impact"
-]
+}
 DEFAULT_TIMEOUT = 30
 
 # Constants relating to 'get_error_message_from_exception'
