@@ -10,16 +10,16 @@
     "product_version_regex": ".*",
     "publisher": "Splunk",
     "license": "Copyright (c) 2018-2022 Splunk Inc.",
-    "app_version": "2.1.5",
+    "app_version": "2.2.0",
     "utctime_updated": "2022-01-12T18:04:41.000000Z",
     "package_name": "phantom_thehive",
     "main_module": "thehive_connector.py",
-    "min_phantom_version": "4.10.0.40961",
+    "min_phantom_version": "5.2.0",
     "python_version": "3",
     "fips_compliant": true,
     "app_wizard_version": "1.0.0",
     "latest_tested_versions": [
-        "On-prem, Version: 3.0.9, 09/22/2021"
+        "On-prem, Version: 4.1.18-1, 27 May, 2022"
     ],
     "configuration": {
         "base_url": {
@@ -39,6 +39,12 @@
             "data_type": "boolean",
             "default": false,
             "order": 1
+        },
+        "timezone": {
+            "description": "Timezone (default: UTC)",
+            "data_type": "timezone",
+            "default": "UTC",
+            "order": 3
         }
     },
     "actions": [
@@ -112,6 +118,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.description",
                     "data_type": "string",
                     "column_name": "Description",
@@ -136,7 +150,7 @@
                         "thehive username"
                     ],
                     "example_values": [
-                        "herman.edwards"
+                        "test.user"
                     ]
                 },
                 {
@@ -233,6 +247,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.endDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1542187296341
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.flag",
                     "data_type": "boolean",
                     "example_values": [
@@ -251,6 +272,10 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.impactStatus",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.owner",
                     "data_type": "string",
                     "column_name": "Owner",
@@ -259,8 +284,19 @@
                         "thehive username"
                     ],
                     "example_values": [
-                        "herman.edwards"
+                        "test.user"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.resolutionStatus",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.severity",
@@ -286,6 +322,10 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.summary",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.title",
                     "data_type": "string",
                     "example_values": [
@@ -302,21 +342,15 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
+                    "data_path": "action_result.data.*.updatedAt",
+                    "data_type": "numeric",
                     "example_values": [
-                        "success",
-                        "failed"
+                        1542289085536
                     ]
                 },
                 {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Successfully created a new case",
-                        "Invalid severity entered. Must be one of: Low, Medium, or High.",
-                        "Invalid TLP entered. Must be one of: White, Green, Amber, or Red."
-                    ]
+                    "data_path": "action_result.data.*.updatedBy",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.summary.important_data",
@@ -330,6 +364,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         125
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully created a new case"
                     ]
                 },
                 {
@@ -360,7 +401,7 @@
             "read_only": true,
             "parameters": {
                 "id": {
-                    "description": "Ticket ID (AWGxGFw138eA2eAzW_e6)",
+                    "description": "Ticket ID",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
@@ -371,6 +412,14 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
@@ -515,7 +564,14 @@
                         "thehive username"
                     ],
                     "example_values": [
-                        "herman.edwards"
+                        "test.user"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
                     ]
                 },
                 {
@@ -592,12 +648,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -605,10 +657,6 @@
                     "example_values": [
                         "Successfully fetched ticket"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -657,10 +705,20 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 1,
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.fields",
                     "data_type": "string",
                     "example_values": [
-                        "{\"severity\": 1, \"description\": \"Herman, what are you doing\"}"
+                        "{\"severity\": 1, \"description\": \"User, what are you doing\"}"
                     ]
                 },
                 {
@@ -774,7 +832,14 @@
                     "data_path": "action_result.data.*.description",
                     "data_type": "string",
                     "example_values": [
-                        "Herman, what are you doing"
+                        "User, what are you doing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.endDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1542187296341
                     ]
                 },
                 {
@@ -796,11 +861,26 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.impactStatus",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.owner",
                     "data_type": "string",
                     "example_values": [
                         "testUser"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.resolutionStatus",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.severity",
@@ -822,6 +902,10 @@
                     "example_values": [
                         "Open"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.title",
@@ -852,14 +936,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "column_name": "Status",
-                    "column_order": 1,
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -869,10 +947,6 @@
                     "example_values": [
                         "Successfully updated ticket"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -902,6 +976,14 @@
             "read_only": true,
             "parameters": {},
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.data.*._id",
                     "data_type": "string",
@@ -1097,6 +1179,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.resolutionStatus",
                     "data_type": "string",
                     "example_values": [
@@ -1173,21 +1262,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Num tickets: 239"
-                    ]
-                },
-                {
                     "data_path": "action_result.summary",
                     "data_type": "string"
                 },
@@ -1196,6 +1270,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         21
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Num tickets: 239"
                     ]
                 },
                 {
@@ -1215,6 +1296,346 @@
             ],
             "render": {
                 "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "list alerts",
+            "identifier": "list_alerts",
+            "description": "List all alerts",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {},
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~557296"
+                    ],
+                    "contains": [
+                        "thehive alert id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~651296"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "case_artifact"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.contentType",
+                    "data_type": "string",
+                    "example_values": [
+                        "application/zip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.hashes",
+                    "data_type": "string",
+                    "example_values": [
+                        "c2b8d2623a1fd062a898615015583ce9"
+                    ],
+                    "contains": [
+                        "md5"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "1fcadb1293968b037bb0de3a8a6e8368cdf8ab7ab9718023abaa14d2a41f501b"
+                    ],
+                    "contains": [
+                        "sha256"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "file_name.apk"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.attachment.size",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1434318
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650452201934
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "adminuser@thehive.local"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.data",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.1.19.195"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.dataType",
+                    "data_type": "string",
+                    "example_values": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~651296"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.ioc",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test artifact message"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.sighted",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.startDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650452201934
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "domain"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.case",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.caseTemplate",
+                    "data_type": "string",
+                    "example_values": [
+                        "TestCaseTemplateName"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650451922582
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "adminuser@thehive.local"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.date",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650451922577
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Alert description"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.externalLink",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.follow",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~557296"
+                    ],
+                    "contains": [
+                        "thehive alert id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.severity",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test App"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.sourceRef",
+                    "data_type": "string",
+                    "example_values": [
+                        "test_source_ref"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "New"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "alert-automation"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.title",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test Alert title"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        3
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test Event"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedAt",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.updatedBy",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.num_alerts",
+                    "data_type": "numeric",
+                    "example_values": [
+                        12
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Num alerts: 12"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "custom",
+                "view": "thehive_view.display_custom_view"
             },
             "versions": "EQ(*)"
         },
@@ -1255,6 +1676,14 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
@@ -1347,6 +1776,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.group",
+                    "data_type": "string",
+                    "example_values": [
+                        "default"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "contains": [
@@ -1380,12 +1816,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -1393,10 +1825,6 @@
                     "example_values": [
                         "Successfully created task"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -1422,7 +1850,7 @@
             "action": "search ticket",
             "identifier": "search_ticket",
             "description": "Search ticket",
-            "verbose": "For example, {\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"bill\"]}}}<br>Note: \"_values\" field should be in lowercase only.",
+            "verbose": "For example, {\"_in\": {\"_field\": \"title\", \"_values\": [\"bill\"]}}<br>Note: \"_values\" field should be in lowercase only.",
             "type": "generic",
             "read_only": false,
             "parameters": {
@@ -1435,14 +1863,20 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.search_ticket",
                     "data_type": "string",
                     "example_values": [
-                        "{\"query\": {\"_in\": {\"_field\": \"description\", \"_values\": [\"Herman\"]}}}",
-                        "{\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}}",
-                        "{\"query\": {\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}}",
-                        "{\"query\": {\"_lt\": {\"tlp\": 3}}}",
-                        "{\"query\": {\"_not\": {\"_field\": \"owner\",\"_value\": \"admin\"}}}"
+                        "{\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}",
+                        "{\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}",
+                        "{\"_lt\": {\"tlp\": 3}}"
                     ]
                 },
                 {
@@ -1567,7 +2001,7 @@
                     "data_path": "action_result.data.*.description",
                     "data_type": "string",
                     "example_values": [
-                        "Herman, what are you doing"
+                        "User, what are you doing"
                     ]
                 },
                 {
@@ -1640,6 +2074,13 @@
                     "column_order": 1,
                     "example_values": [
                         "admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
                     ]
                 },
                 {
@@ -1719,11 +2160,10 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
+                    "data_path": "action_result.summary.num_results",
+                    "data_type": "numeric",
                     "example_values": [
-                        "success",
-                        "failed"
+                        10
                     ]
                 },
                 {
@@ -1731,13 +2171,6 @@
                     "data_type": "string",
                     "example_values": [
                         "Num results: 10"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.num_results",
-                    "data_type": "numeric",
-                    "example_values": [
-                        10
                     ]
                 },
                 {
@@ -1764,7 +2197,7 @@
             "action": "search task",
             "identifier": "search_task",
             "description": "Search task",
-            "verbose": "For example, {\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"bill\"]}}}<br>Note: \"_values\" field should be in lowercase only.",
+            "verbose": "For example, {\"_in\": {\"_field\": \"title\", \"_values\": [\"bill\"]}}<br>Note: \"_values\" field should be in lowercase only.",
             "type": "generic",
             "read_only": false,
             "parameters": {
@@ -1777,14 +2210,20 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.search_task",
                     "data_type": "string",
                     "example_values": [
-                        "{\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"moose\"]}}}",
-                        "{\"query\": {\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}}",
-                        "{\"query\": {\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}}",
-                        "{\"query\": {\"_lt\": {\"tlp\": 3}}}",
-                        "{\"query\": {\"_not\": {\"_field\": \"owner\",\"_value\": \"admin\"}}}"
+                        "{\"_in\": {\"_field\": \"title\", \"_values\": [\"test\"]}}",
+                        "{\"_like\": {\"_field\": \"title\",\"_value\": \"*testing*\"}}",
+                        "{\"_lt\": {\"tlp\": 3}}"
                     ]
                 },
                 {
@@ -1867,6 +2306,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.group",
+                    "data_type": "string",
+                    "example_values": [
+                        "default"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "contains": [
@@ -1930,11 +2376,10 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
+                    "data_path": "action_result.summary.num_results",
+                    "data_type": "numeric",
                     "example_values": [
-                        "success",
-                        "failed"
+                        10
                     ]
                 },
                 {
@@ -1942,13 +2387,6 @@
                     "data_type": "string",
                     "example_values": [
                         "Num results: 10"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.num_results",
-                    "data_type": "numeric",
-                    "example_values": [
-                        10
                     ]
                 },
                 {
@@ -2020,6 +2458,14 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.task_description",
                     "data_type": "string",
@@ -2144,6 +2590,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.group",
+                    "data_type": "string",
+                    "example_values": [
+                        "default"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "contains": [
@@ -2180,7 +2633,6 @@
                     "data_path": "action_result.data.*.status",
                     "data_type": "string",
                     "example_values": [
-                        "Completed",
                         "InProgress"
                     ]
                 },
@@ -2206,12 +2658,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -2219,10 +2667,6 @@
                     "example_values": [
                         "Successfully updated task"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -2247,20 +2691,31 @@
         {
             "action": "create observable",
             "identifier": "create_observable",
-            "description": "Creates an observable for the specified case",
+            "description": "Creates an observable for the specified case/alert",
             "verbose": "If a file is to be attached to this observable, the 'vault_id' parameter must be used.",
             "type": "generic",
             "read_only": false,
             "parameters": {
                 "id": {
-                    "description": "Ticket ID (ex: AWGxGFw138eA2eAzW_e6)",
+                    "description": "Ticket/Alert ID",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
                     "contains": [
-                        "thehive ticket id"
+                        "thehive ticket id",
+                        "thehive alert id"
                     ],
                     "order": 0
+                },
+                "ticket_type": {
+                    "description": "Ticket or Alert (Default is Ticket)",
+                    "data_type": "string",
+                    "value_list": [
+                        "Ticket",
+                        "Alert"
+                    ],
+                    "default": "Ticket",
+                    "order": 1
                 },
                 "data_type": {
                     "description": "Data type of the observable (select one from list)",
@@ -2283,12 +2738,12 @@
                         "url",
                         "user-agent"
                     ],
-                    "order": 1
+                    "order": 2
                 },
                 "data": {
                     "description": "Value of the data for this observable",
                     "data_type": "string",
-                    "order": 2
+                    "order": 3
                 },
                 "tlp": {
                     "description": "TLP (default is Amber)",
@@ -2300,19 +2755,17 @@
                         "White"
                     ],
                     "default": "Amber",
-                    "order": 3
+                    "order": 4
                 },
                 "tags": {
                     "description": "Tags to associate with this observable (can be a comma-separated list)",
                     "data_type": "string",
-                    "required": true,
-                    "order": 4
+                    "order": 5
                 },
                 "description": {
                     "description": "Describe the observable in the context of the case",
                     "data_type": "string",
-                    "required": true,
-                    "order": 5
+                    "order": 6
                 },
                 "vault_id": {
                     "description": "Vault ID for the file to be attached. Ignored if not 'file' data_type",
@@ -2321,15 +2774,33 @@
                     "contains": [
                         "vault id"
                     ],
-                    "order": 6
+                    "order": 7
                 },
                 "ioc": {
                     "description": "Indicates if this observable is an IOC",
                     "data_type": "boolean",
-                    "order": 7
+                    "order": 8
+                },
+                "sighted": {
+                    "description": "Indicates if this observable was sighted",
+                    "data_type": "boolean",
+                    "order": 9
+                },
+                "ignore_similarity": {
+                    "description": "Indicates if this observable should be used or not to calculate the similarity stats",
+                    "data_type": "boolean",
+                    "order": 10
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.data",
                     "data_type": "string",
@@ -2355,10 +2826,19 @@
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
                     "contains": [
-                        "thehive ticket id"
+                        "thehive ticket id",
+                        "thehive alert id"
                     ],
                     "example_values": [
                         "AWQfCdsmt-_WVPphkhQv"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ignore_similarity",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false,
+                        true
                     ]
                 },
                 {
@@ -2370,10 +2850,25 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.parameter.sighted",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false,
+                        true
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.tags",
                     "data_type": "string",
                     "example_values": [
                         "domain"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ticket_type",
+                    "data_type": "string",
+                    "example_values": [
+                        "Ticket"
                     ]
                 },
                 {
@@ -2397,7 +2892,6 @@
                     "data_path": "action_result.data.*._id",
                     "data_type": "string",
                     "example_values": [
-                        "6ecf393fd38eebe6bdff0384c4b1e4d7",
                         "2e441ebe9994d5f6500454fbc10e148c"
                     ],
                     "contains": [
@@ -2522,7 +3016,6 @@
                     "data_path": "action_result.data.*.dataType",
                     "data_type": "string",
                     "example_values": [
-                        "file",
                         "domain"
                     ],
                     "column_order": 2,
@@ -2536,7 +3029,6 @@
                         "md5"
                     ],
                     "example_values": [
-                        "6ecf393fd38eebe6bdff0384c4b1e4d7",
                         "2e441ebe9994d5f6500454fbc10e148c"
                     ],
                     "column_order": 0,
@@ -2612,12 +3104,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -2625,10 +3113,6 @@
                     "example_values": [
                         "Successfully created observable"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -2692,6 +3176,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.data_type",
                     "data_type": "string",
                     "example_values": [
@@ -2714,7 +3206,6 @@
                     "data_path": "action_result.data.*._id",
                     "data_type": "string",
                     "example_values": [
-                        "1e3ca6553ce39d7e02bd33d810bc146f",
                         "c898f24d96ecbbce9506f1b5260cf5bb"
                     ],
                     "contains": [
@@ -2855,10 +3346,7 @@
                     "data_path": "action_result.data.*.dataType",
                     "data_type": "string",
                     "example_values": [
-                        "ip",
-                        "fqdn",
-                        "domain",
-                        "file"
+                        "domain"
                     ]
                 },
                 {
@@ -2949,7 +3437,6 @@
                     "data_path": "action_result.data.*.status",
                     "data_type": "string",
                     "example_values": [
-                        "Ok",
                         "Deleted"
                     ]
                 },
@@ -2957,17 +3444,13 @@
                     "data_path": "action_result.data.*.tags",
                     "data_type": "string",
                     "example_values": [
-                        "malicious",
-                        "domain",
-                        "file",
-                        "mail"
+                        "domain"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.tlp",
                     "data_type": "numeric",
                     "example_values": [
-                        2,
                         3
                     ]
                 },
@@ -2986,12 +3469,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -2999,10 +3478,6 @@
                     "example_values": [
                         "Num observables found: 8"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -3021,7 +3496,7 @@
             ],
             "render": {
                 "type": "custom",
-                "view": "thehive_view.display_get_observables"
+                "view": "thehive_view.display_custom_view"
             },
             "versions": "EQ(*)"
         },
@@ -3050,6 +3525,14 @@
                 }
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.message",
                     "data_type": "string",
@@ -3156,7 +3639,7 @@
                     "data_path": "action_result.data.*.owner",
                     "data_type": "string",
                     "example_values": [
-                        "phantom"
+                        "username"
                     ]
                 },
                 {
@@ -3174,12 +3657,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -3189,8 +3668,966 @@
                     ]
                 },
                 {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "create alert",
+            "identifier": "create_alert",
+            "description": "Create Alert",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "title": {
+                    "description": "Title",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 0
+                },
+                "description": {
+                    "description": "Description",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 1
+                },
+                "severity": {
+                    "description": "Severity of the alert (default is Medium)",
+                    "data_type": "string",
+                    "value_list": [
+                        "Low",
+                        "Medium",
+                        "High"
+                    ],
+                    "default": "Medium",
+                    "order": 2
+                },
+                "tags": {
+                    "description": "Tags to associate with this alert (can be a comma-separated list)",
+                    "data_type": "string",
+                    "order": 3
+                },
+                "tlp": {
+                    "description": "TLP (default is Amber)",
+                    "data_type": "string",
+                    "value_list": [
+                        "White",
+                        "Green",
+                        "Amber",
+                        "Red"
+                    ],
+                    "default": "Amber",
+                    "order": 4
+                },
+                "type": {
+                    "description": "Type of the alert",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 5
+                },
+                "source": {
+                    "description": "Source of the alert",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 6
+                },
+                "source_ref": {
+                    "description": "Source reference of the alert",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 7
+                },
+                "artifacts": {
+                    "description": "JSON Array containing artifact attributes",
+                    "data_type": "string",
+                    "order": 8
+                },
+                "case_template": {
+                    "description": "Case template to use when case is created from this alert",
+                    "data_type": "string",
+                    "order": 9
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.artifacts",
+                    "data_type": "string",
+                    "example_values": [
+                        "[{\"dataType\":\"mail\",\n        \"tags\":[\"Recipient\"],\n        \"data\":[\"testuser@domain.com\"]}]"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.case_template",
+                    "data_type": "string",
+                    "example_values": [
+                        "TemplateName"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Alert description text"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.severity",
+                    "data_type": "string",
+                    "example_values": [
+                        "Medium"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "Cofense Add-on"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.source_ref",
+                    "data_type": "string",
+                    "example_values": [
+                        "2272"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "phishing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.title",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is a test from App With Observables"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.tlp",
+                    "data_type": "string",
+                    "example_values": [
+                        "Amber"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "internal"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string",
+                    "contains": [
+                        "thehive alert id"
+                    ],
+                    "example_values": [
+                        "~32800"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~57520"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "case_artifact"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779088314
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.data",
+                    "data_type": "string",
+                    "example_values": [
+                        "testuser@domain.edu"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.dataType",
+                    "data_type": "string",
+                    "example_values": [
+                        "mail"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~57520"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.ioc",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is example message"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.sighted",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.startDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779088314
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "Recipient"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.case",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.caseTemplate",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779088308
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.date",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779088305
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "column_name": "Description",
+                    "column_order": 2,
+                    "example_values": [
+                        "Alert description text"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.externalLink",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.follow",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "column_name": "ID",
+                    "column_order": 0,
+                    "contains": [
+                        "thehive alert id"
+                    ],
+                    "example_values": [
+                        "~32800"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.severity",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "Cofense Add-on"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.sourceRef",
+                    "data_type": "string",
+                    "example_values": [
+                        "2272"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "New"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "phishing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.title",
+                    "data_type": "string",
+                    "column_name": "Title",
+                    "column_order": 1,
+                    "example_values": [
+                        "This is a test from App With Observables"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.type",
+                    "data_type": "string",
+                    "column_name": "Type",
+                    "column_order": 3,
+                    "example_values": [
+                        "internal"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedAt",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.updatedBy",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.summary",
                     "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully created task"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get alert",
+            "identifier": "get_alert",
+            "description": "Get alert information",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "id": {
+                    "description": "Alert ID",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "thehive alert id"
+                    ],
+                    "order": 0
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~32968"
+                    ],
+                    "contains": [
+                        "thehive alert id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string",
+                    "contains": [
+                        "thehive alert id"
+                    ],
+                    "example_values": [
+                        "~32968"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "alert"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~786632"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*._type",
+                    "data_type": "string",
+                    "example_values": [
+                        "case_artifact"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650522468968
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "testuser@domain.local"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.data",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://www.somedomain.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.dataType",
+                    "data_type": "string",
+                    "example_values": [
+                        "domain"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~786632"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.ioc",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "This is test message"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.sighted",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.startDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1650522468968
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.artifacts.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.case",
+                    "data_type": "string",
+                    "example_values": [
+                        "~37056"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.caseTemplate",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779406227
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.date",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649779406223
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "column_name": "Description",
+                    "column_order": 2,
+                    "example_values": [
+                        "Example description"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.externalLink",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.follow",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "column_name": "ID",
+                    "column_order": 0,
+                    "contains": [
+                        "thehive alert id"
+                    ],
+                    "example_values": [
+                        "~32968"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.pap",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.severity",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.source",
+                    "data_type": "string",
+                    "example_values": [
+                        "Cofense Add-on"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.sourceRef",
+                    "data_type": "string",
+                    "example_values": [
+                        "2271"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.status",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 3,
+                    "example_values": [
+                        "Imported"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "phishing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.title",
+                    "data_type": "string",
+                    "column_name": "Title",
+                    "column_order": 1,
+                    "example_values": [
+                        "This is a test from App With Observables"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tlp",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.type",
+                    "data_type": "string",
+                    "column_name": "Type",
+                    "column_order": 4,
+                    "example_values": [
+                        "internal"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649783209002
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.updatedBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully fetched alert"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "add ttp",
+            "identifier": "add_ttp",
+            "description": "Add TTP to Case",
+            "type": "investigate",
+            "read_only": false,
+            "parameters": {
+                "id": {
+                    "description": "Case ID",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "thehive ticket id"
+                    ],
+                    "order": 0
+                },
+                "ph": {
+                    "description": "Placeholder",
+                    "data_type": "ph",
+                    "order": 1
+                },
+                "tactic": {
+                    "description": "Tactic",
+                    "data_type": "string",
+                    "value_list": [
+                        "reconnaissance",
+                        "resource-development",
+                        "initial-access",
+                        "execution",
+                        "persistence",
+                        "privilege-escalation",
+                        "defense-evasion",
+                        "credential-access",
+                        "discovery",
+                        "lateral-movement",
+                        "collection",
+                        "command-and-control",
+                        "exfiltration",
+                        "impact"
+                    ],
+                    "required": true,
+                    "order": 2
+                },
+                "pattern_id": {
+                    "description": "Pattern ID (Technique)",
+                    "data_type": "string",
+                    "required": true,
+                    "order": 3
+                },
+                "occur_date": {
+                    "description": "Occur Date (format: DD-MM-YYYY hh:mm)",
+                    "data_type": "string",
+                    "order": 4
+                },
+                "description": {
+                    "description": "Procedure",
+                    "data_type": "string",
+                    "order": 5
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test procedure"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "~73904"
+                    ],
+                    "contains": [
+                        "thehive ticket id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.occur_date",
+                    "data_type": "string",
+                    "example_values": [
+                        "17-04-2022 11:20"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.pattern_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "T1566"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.tactic",
+                    "data_type": "string",
+                    "example_values": [
+                        "initial-access"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._createdAt",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649801936613
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._createdBy",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@domain.com"
+                    ],
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string",
+                    "column_name": "ID",
+                    "column_order": 0,
+                    "example_values": [
+                        "~376864"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test Procedure"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.occurDate",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1649801935925
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.patternId",
+                    "data_type": "string",
+                    "column_name": "Pattern ID",
+                    "column_order": 1,
+                    "example_values": [
+                        "T1566"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.tactic",
+                    "data_type": "string",
+                    "column_name": "Tactic",
+                    "column_order": 2,
+                    "example_values": [
+                        "initial-access"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully added tactic/technique"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -3217,35 +4654,35 @@
         "wheel": [
             {
                 "module": "beautifulsoup4",
-                "input_file": "wheels/beautifulsoup4-4.9.1-py3-none-any.whl"
+                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/certifi-2021.10.8-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2022.5.18.1-py3-none-any.whl"
             },
             {
                 "module": "chardet",
-                "input_file": "wheels/chardet-3.0.4-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/chardet-3.0.4-py2.py3-none-any.whl"
             },
             {
                 "module": "idna",
-                "input_file": "wheels/idna-2.10-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
             },
             {
                 "module": "python_magic",
-                "input_file": "wheels/python_magic-0.4.18-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/python_magic-0.4.18-py2.py3-none-any.whl"
             },
             {
                 "module": "requests",
-                "input_file": "wheels/requests-2.25.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/soupsieve-2.3.1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/urllib3-1.26.8-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.9-py2.py3-none-any.whl"
             }
         ]
     }
