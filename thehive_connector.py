@@ -59,22 +59,22 @@ class ThehiveConnector(BaseConnector):
         :return: error message
         """
         error_code = None
-        error_msg = ERR_MSG_UNAVAILABLE
+        err_msg = ERR_MSG_UNAVAILABLE
 
         try:
             if hasattr(e, "args"):
                 if len(e.args) > 1:
                     error_code = e.args[0]
-                    error_msg = e.args[1]
+                    err_msg = e.args[1]
                 elif len(e.args) == 1:
-                    error_msg = e.args[0]
+                    err_msg = e.args[0]
         except Exception:
             self.debug_print("Error occurred while fetching exception information")
 
         if not error_code:
-            error_text = "Error Message: {}".format(error_msg)
+            error_text = "Error Message: {}".format(err_msg)
         else:
-            error_text = "Error Code: {}. Error Message: {}".format(error_code, error_msg)
+            error_text = "Error Code: {}. Error Message: {}".format(error_code, err_msg)
 
         return error_text
 
