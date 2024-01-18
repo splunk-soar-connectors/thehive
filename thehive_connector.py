@@ -1,6 +1,6 @@
 # File: thehive_connector.py
 #
-# Copyright (c) 2018-2022 Splunk Inc.
+# Copyright (c) 2018-2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,22 +59,22 @@ class ThehiveConnector(BaseConnector):
         :return: error message
         """
         error_code = None
-        error_msg = ERR_MSG_UNAVAILABLE
+        err_msg = ERR_MSG_UNAVAILABLE
 
         try:
             if hasattr(e, "args"):
                 if len(e.args) > 1:
                     error_code = e.args[0]
-                    error_msg = e.args[1]
+                    err_msg = e.args[1]
                 elif len(e.args) == 1:
-                    error_msg = e.args[0]
+                    err_msg = e.args[0]
         except Exception:
             self.debug_print("Error occurred while fetching exception information")
 
         if not error_code:
-            error_text = "Error Message: {}".format(error_msg)
+            error_text = "Error Message: {}".format(err_msg)
         else:
-            error_text = "Error Code: {}. Error Message: {}".format(error_code, error_msg)
+            error_text = "Error Code: {}. Error Message: {}".format(error_code, err_msg)
 
         return error_text
 
@@ -214,12 +214,12 @@ class ThehiveConnector(BaseConnector):
             self.debug_print(self._get_error_message_from_exception(e))
             return RetVal(action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_INVALID_SCHEMA.format(url=url)), resp_json)
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
-            self.debug_print(self._get_error_message_from_exception(error_msg))
+            error_message = self._get_error_message_from_exception(e)
+            self.debug_print(error_message)
             return RetVal(
                 action_result.set_status(
                     phantom.APP_ERROR,
-                    THEHIVE_ERR_CONNECTING_TO_SERVER.format(error=error_msg),
+                    THEHIVE_ERR_CONNECTING_TO_SERVER.format(error=error_message),
                 ),
                 resp_json
             )
@@ -435,8 +435,8 @@ class ThehiveConnector(BaseConnector):
         try:
             search = json.loads(search)
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
-            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_FIELDS_JSON_PARSE.format(error=error_msg))
+            error_message = self._get_error_message_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_FIELDS_JSON_PARSE.format(error=error_message))
         data.update(search)
         headers = {'Content-Type': 'application/json', 'Authorization': self._auth_token}
         ret_val, response = self._make_rest_call(endpoint, action_result, params=params, data=data, headers=headers,
@@ -500,8 +500,8 @@ class ThehiveConnector(BaseConnector):
         try:
             fields = json.loads(fields)
         except Exception as e:
-            error_msg = self._get_error_message_from_exception(e)
-            return RetVal(action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_FIELDS_JSON_PARSE.format(error=error_msg)), None)
+            error_message = self._get_error_message_from_exception(e)
+            return RetVal(action_result.set_status(phantom.APP_ERROR, THEHIVE_ERR_FIELDS_JSON_PARSE.format(error=error_message)), None)
 
         return RetVal(phantom.APP_SUCCESS, fields)
 
@@ -581,11 +581,11 @@ class ThehiveConnector(BaseConnector):
                 _, _, vault_file_info = ph_rules.vault_info(container_id=self.get_container_id(), vault_id=vault_id)
                 vault_file_info = list(vault_file_info)
             except Exception as e:
-                error_msg = self._get_error_message_from_exception(e)
-                self.debug_print(error_msg)
+                error_message = self._get_error_message_from_exception(e)
+                self.debug_print(error_message)
                 return action_result.set_status(
                     phantom.APP_ERROR,
-                    "Unable to find specified Vault file. Please check Vault ID and try again. {}".format(error_msg)
+                    "Unable to find specified Vault file. Please check Vault ID and try again. {}".format(error_message)
                 )
 
             if len(vault_file_info) != 1:
