@@ -1,6 +1,6 @@
 # File: thehive_consts.py
 #
-# Copyright (c) 2018-2024 Splunk Inc.
+# Copyright (c) 2018-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ THEHIVE_DATA_TYPE_LIST = {
     "registry",
     "uri_path",
     "url",
-    "user-agent"
+    "user-agent",
 }
 THEHIVE_TACTIC_LIST = {
     "reconnaissance",
@@ -46,7 +46,7 @@ THEHIVE_TACTIC_LIST = {
     "collection",
     "command-and-control",
     "exfiltration",
-    "impact"
+    "impact",
 }
 DEFAULT_TIMEOUT = 30
 
@@ -58,13 +58,17 @@ THEHIVE_ERR_INVALID_URL = "Error connecting to server. Invalid URL: '{url}'"
 THEHIVE_ERR_CONNECTION_REFUSED = "Error connecting to server. Connection Refused from the server for '{url}' url."
 THEHIVE_ERR_INVALID_SCHEMA = "Error connecting to server. No connection adapters were found for '{url}' url."
 THEHIVE_ERR_CONNECTING_TO_SERVER = "Error connecting to server. Details: {error}"
-THEHIVE_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format. " \
-                                 "Resetting the state file with the default format. Please try again."
+THEHIVE_STATE_FILE_CORRUPT_ERR = (
+    "Error occurred while loading the state file due to its unexpected format. "
+    "Resetting the state file with the default format. Please try again."
+)
 THEHIVE_ERR_FIELDS_JSON_PARSE = "Unable to parse the fields parameter into a dictionary. {error}"
 THEHIVE_ERR_INVALID_SEVERITY = "Invalid severity entered. Must be one of: Low, Medium, or High."
 THEHIVE_ERR_INVALID_TLP = "Invalid TLP entered. Must be one of: White, Green, Amber, or Red."
 THEHIVE_ERR_INVALID_STATUS = "Invalid status entered. Must be one of: Waiting, InProgress, Completed, or Cancel."
 THEHIVE_ERR_INVALID_TICKET_TYPE = "Invalid 'ticket type' entered. Must be one of: Ticket or Alert."
-THEHIVE_ERR_INVALID_DATA_TYPE = "Invalid 'data type' entered. Must be one of: autonomous-system, domain, file, filename, fqdn," \
-                                " hash, ip, mail, mail_subject, other, regexp, registry, uri_path, url, or user-agent."
+THEHIVE_ERR_INVALID_DATA_TYPE = (
+    "Invalid 'data type' entered. Must be one of: autonomous-system, domain, file, filename, fqdn,"
+    " hash, ip, mail, mail_subject, other, regexp, registry, uri_path, url, or user-agent."
+)
 THEHIVE_ERR_INVALID_ARTIFACTS = "Invalid Artifact JSON entered. Must be a valid JSON list of artifacts"

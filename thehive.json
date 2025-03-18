@@ -9,7 +9,7 @@
     "product_name": "TheHive",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) 2018-2024 Splunk Inc.",
+    "license": "Copyright (c) 2018-2025 Splunk Inc.",
     "app_version": "2.2.1",
     "utctime_updated": "2022-01-12T18:04:41.000000Z",
     "package_name": "phantom_thehive",
@@ -4642,6 +4642,10 @@
                     "example_values": [
                         1
                     ]
+                },
+                {
+                    "data_path": "action_result.parameter.ph",
+                    "data_type": "ph"
                 }
             ],
             "render": {
