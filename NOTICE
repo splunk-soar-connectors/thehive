@@ -1,16 +1,19 @@
 Splunk SOAR TheHive
-Copyright (c) 2018-2024 Splunk Inc.
+Copyright (c) 2018-2025 Splunk Inc.
 
-Third-party Software Attributions:
+Third Party Software Attributions:
 
-Library: beautifulsoup4
+Name: beautifulsoup4
 Version: 4.9.1
+Author: Leonard Richardson
 License: MIT
-Copyright 2004-2017 Leonard Richardson
-Copyright 2004-2019 Leonard Richardson
-Copyright 2018 Isaac Muse
 
-Library: python-magic
+Name: python-magic
 Version: 0.4.18
+Author: Adam Hupp
 License: MIT
-Copyright 2001-2014 Adam Hupp
+
+Name: soupsieve
+Version: 2.6
+Author:
+License:
