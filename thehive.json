@@ -15,7 +15,7 @@
     "package_name": "phantom_thehive",
     "main_module": "thehive_connector.py",
     "min_phantom_version": "5.2.0",
-    "python_version": "3",
+    "python_version": ["3.9", "3.13"],
     "fips_compliant": true,
     "app_wizard_version": "1.0.0",
     "latest_tested_versions": [
