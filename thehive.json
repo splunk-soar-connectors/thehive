@@ -4671,19 +4671,9 @@
         ]
     },
     "pip39_dependencies": {
-        "wheel": [
-            {
-                "module": "beautifulsoup4",
-                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
-            },
-            {
-                "module": "python_magic",
-                "input_file": "wheels/shared/python_magic-0.4.18-py2.py3-none-any.whl"
-            },
-            {
-                "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.5-py3-none-any.whl"
-            }
-        ]
+        "wheel": []
+    },
+    "pip313_dependencies": {
+        "wheel": []
     }
 }

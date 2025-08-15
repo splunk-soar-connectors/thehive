@@ -1,9 +1,9 @@
 # TheHive
 
-Publisher: Splunk \
-Connector Version: 2.2.1 \
-Product Vendor: TheHive Project \
-Product Name: TheHive \
+Publisher: Splunk <br>
+Connector Version: 2.2.1 <br>
+Product Vendor: TheHive Project <br>
+Product Name: TheHive <br>
 Minimum Product Version: 5.2.0
 
 This app integrates with an instance of TheHive to perform ticketing actions
@@ -47,28 +47,28 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[create ticket](#action-create-ticket) - Create a ticket (issue) \
-[get ticket](#action-get-ticket) - Get ticket (issue) information \
-[update ticket](#action-update-ticket) - Update ticket (issue) \
-[list tickets](#action-list-tickets) - List all tickets \
-[list alerts](#action-list-alerts) - List all alerts \
-[create task](#action-create-task) - Create Task \
-[search ticket](#action-search-ticket) - Search ticket \
-[search task](#action-search-task) - Search task \
-[update task](#action-update-task) - Update the task \
-[create observable](#action-create-observable) - Creates an observable for the specified case/alert \
-[get observables](#action-get-observables) - Retrieve observables associated with a case \
-[create task log](#action-create-task-log) - Create task log \
-[create alert](#action-create-alert) - Create Alert \
-[get alert](#action-get-alert) - Get alert information \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[create ticket](#action-create-ticket) - Create a ticket (issue) <br>
+[get ticket](#action-get-ticket) - Get ticket (issue) information <br>
+[update ticket](#action-update-ticket) - Update ticket (issue) <br>
+[list tickets](#action-list-tickets) - List all tickets <br>
+[list alerts](#action-list-alerts) - List all alerts <br>
+[create task](#action-create-task) - Create Task <br>
+[search ticket](#action-search-ticket) - Search ticket <br>
+[search task](#action-search-task) - Search task <br>
+[update task](#action-update-task) - Update the task <br>
+[create observable](#action-create-observable) - Creates an observable for the specified case/alert <br>
+[get observables](#action-get-observables) - Retrieve observables associated with a case <br>
+[create task log](#action-create-task-log) - Create task log <br>
+[create alert](#action-create-alert) - Create Alert <br>
+[get alert](#action-get-alert) - Get alert information <br>
 [add ttp](#action-add-ttp) - Add TTP to Case
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -83,7 +83,7 @@ No Output
 
 Create a ticket (issue)
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 If the owner mentioned in the input parameter is an invalid user and it does not exist on The Hive platform, the ticket will get successfully created but, the owner displayed on the UI of The Hive will be \*\*\*unknown\*\*\* as per the API behavior. The user can update the same ticket by running the action Update Ticket with a valid user in the owner field.
@@ -144,7 +144,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get ticket (issue) information
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -196,7 +196,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update ticket (issue)
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 If the JSON containing fields is having invalid field names or invalid field values to update, then, none of the fields get updated and the action passes successfully.
@@ -254,7 +254,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List all tickets
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -314,7 +314,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List all alerts
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -375,7 +375,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create Task
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -416,7 +416,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Search ticket
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 For example, {"\_in": {"\_field": "title", "\_values": ["bill"]}}<br>Note: "\_values" field should be in lowercase only.
@@ -480,7 +480,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Search task
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 For example, {"\_in": {"\_field": "title", "\_values": ["bill"]}}<br>Note: "\_values" field should be in lowercase only.
@@ -525,7 +525,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update the task
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -576,7 +576,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Creates an observable for the specified case/alert
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 If a file is to be attached to this observable, the 'vault_id' parameter must be used.
@@ -648,7 +648,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Retrieve observables associated with a case
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -706,7 +706,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create task log
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -745,7 +745,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create Alert
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -822,7 +822,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get alert information
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -880,7 +880,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add TTP to Case
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **False**
 
 #### Action Parameters
