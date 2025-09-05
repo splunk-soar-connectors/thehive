@@ -1,3 +1,2 @@
 **Unreleased**
-
-* chore(ci): update pre-commit config
+* update dependencies for python 3.13

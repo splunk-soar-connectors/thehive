@@ -1,2 +1,0 @@
-beautifulsoup4==4.9.1
-python-magic==0.4.18
