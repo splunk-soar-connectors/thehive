@@ -316,7 +316,7 @@ class ThehiveConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
         data = dict()
-        case_id = param["id"]
+        case_id = quote(param["id"], safe="")
         # encoding case_id
         case_id = quote(case_id, safe="")
 
