@@ -1,6 +1,6 @@
 # File: thehive_connector.py
 #
-# Copyright (c) 2018-2025 Splunk Inc.
+# Copyright (c) 2018-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -187,7 +187,7 @@ class ThehiveConnector(BaseConnector):
                     url,
                     json=data,
                     headers=headers,
-                    verify=config.get("verify_server_cert", False),
+                    verify=config.get("verify_server_cert", True),
                     params=params,
                     files=files,
                     timeout=DEFAULT_TIMEOUT,
@@ -197,7 +197,7 @@ class ThehiveConnector(BaseConnector):
                     url,
                     data=data,
                     headers=headers,
-                    verify=config.get("verify_server_cert", False),
+                    verify=config.get("verify_server_cert", True),
                     params=params,
                     files=files,
                     timeout=DEFAULT_TIMEOUT,
@@ -316,7 +316,7 @@ class ThehiveConnector(BaseConnector):
 
         action_result = self.add_action_result(ActionResult(dict(param)))
         data = dict()
-        case_id = param["id"]
+        case_id = quote(param["id"], safe="")
         # encoding case_id
         case_id = quote(case_id, safe="")
 

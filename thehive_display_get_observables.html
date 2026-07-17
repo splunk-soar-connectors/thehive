@@ -11,7 +11,7 @@
 {% block widget_content %}
   <!-- Main Start Block -->
   <!-- File: thehive_display_get_observables.html
-  Copyright (c) 2018-2025 Splunk Inc.
+  Copyright (c) 2018-2026 Splunk Inc.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -97,7 +97,7 @@
                 <th>TICKET ID</th>
                 <td>
                   <a href="javascript:;"
-                     onclick="context_menu(this, [{'contains': ['thehive ticket id'], 'value': '{{ curr_data.parent }}' }], 0, {{ container.id }}, null, false);">
+                     onclick="context_menu(this, [{'contains': ['thehive ticket id'], 'value': '{{ curr_data.parent|escapejs }}' }], 0, {{ container.id }}, null, false);">
                     {{ curr_data.parent }}
                     &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                   </a>
@@ -136,7 +136,7 @@
                 {% if curr_data.dataType == 'url' %}
                   <td>
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['url'], 'value': '{{ curr_data.data }}' }], 0, {{ container.data }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['url'], 'value': '{{ curr_data.data|escapejs }}' }], 0, {{ container.data }}, null, false);">
                       {{ curr_data.data }}
                       &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                     </a>
@@ -144,7 +144,7 @@
                 {% elif curr_data.dataType == 'ip' %}
                   <td>
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['ip'], 'value': '{{ curr_data.data }}' }], 0, {{ container.data }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['ip'], 'value': '{{ curr_data.data|escapejs }}' }], 0, {{ container.data }}, null, false);">
                       {{ curr_data.data }}
                       &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                     </a>
@@ -152,7 +152,7 @@
                 {% elif curr_data.dataType == 'domain' %}
                   <td>
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['domain'], 'value': '{{ curr_data.data }}' }], 0, {{ container.data }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['domain'], 'value': '{{ curr_data.data|escapejs }}' }], 0, {{ container.data }}, null, false);">
                       {{ curr_data.data }}
                       &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                     </a>
@@ -160,7 +160,7 @@
                 {% elif curr_data.dataType == 'mail' %}
                   <td>
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['email'], 'value': '{{ curr_data.data }}' }], 0, {{ container.data }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['email'], 'value': '{{ curr_data.data|escapejs }}' }], 0, {{ container.data }}, null, false);">
                       {{ curr_data.data }}
                       &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                     </a>
@@ -168,7 +168,7 @@
                 {% elif curr_data.dataType == 'hash' %}
                   <td>
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['hash'], 'value': '{{ curr_data.data }}' }], 0, {{ container.data }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['hash'], 'value': '{{ curr_data.data|escapejs }}' }], 0, {{ container.data }}, null, false);">
                       {{ curr_data.data }}
                       &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                     </a>
@@ -176,7 +176,7 @@
                 {% elif curr_data.dataType == 'filename' %}
                   <td>
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['file name'], 'value': '{{ curr_data.data }}' }], 0, {{ container.data }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['file name'], 'value': '{{ curr_data.data|escapejs }}' }], 0, {{ container.data }}, null, false);">
                       {{ curr_data.data }}
                       &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                     </a>
@@ -193,7 +193,7 @@
                 <th>SHA256</th>
                 <td>
                   <a href="javascript:;"
-                     onclick="context_menu(this, [{'contains': ['hash, sha256'], 'value': '{{ curr_data.attachment.sha256 }}' }], 0, {{ container.attachment.sha256 }}, null, false);">
+                     onclick="context_menu(this, [{'contains': ['hash, sha256'], 'value': '{{ curr_data.attachment.sha256|escapejs }}' }], 0, {{ container.attachment.sha256 }}, null, false);">
                     {{ curr_data.attachment.sha256 }}
                     &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
                   </a>
