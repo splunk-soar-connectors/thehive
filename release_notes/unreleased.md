@@ -1,3 +1,1 @@
 **Unreleased**
-
-* Report failed ticket and alert lookups as action errors. [PSAAS-32662]
