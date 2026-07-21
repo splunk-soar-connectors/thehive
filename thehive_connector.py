@@ -301,9 +301,6 @@ class ThehiveConnector(BaseConnector):
         ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers)
 
         if phantom.is_fail(ret_val):
-            # Return the success with proper error message if the ticket is not found
-            if "404" in action_result.get_message():
-                return action_result.set_status(phantom.APP_SUCCESS, action_result.get_message())
             return action_result.get_status()
 
         # Add the response into the data section
@@ -749,9 +746,6 @@ class ThehiveConnector(BaseConnector):
         ret_val, response = self._make_rest_call(endpoint, action_result, headers=headers)
 
         if phantom.is_fail(ret_val):
-            # Return the success with proper error message if the alert is not found
-            if "404" in action_result.get_message():
-                return action_result.set_status(phantom.APP_SUCCESS, action_result.get_message())
             return action_result.get_status()
 
         # Add the response into the data section

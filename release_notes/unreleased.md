@@ -1,3 +1,3 @@
 **Unreleased**
 
-* - Updated connector development tooling.
+* Report failed ticket and alert lookups as action errors. [PSAAS-32662]
