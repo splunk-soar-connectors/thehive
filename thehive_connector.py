@@ -119,6 +119,16 @@ class ThehiveConnector(BaseConnector):
 
         # Please specify the status codes here
         if 200 <= r.status_code < 399:
+            if not isinstance(resp_json, (dict, list)) or (
+                isinstance(resp_json, list) and any(not isinstance(item, dict) for item in resp_json)
+            ):
+                return RetVal(
+                    action_result.set_status(
+                        phantom.APP_ERROR,
+                        f"Unexpected response format from server. Status Code: {r.status_code}",
+                    ),
+                    None,
+                )
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
         # You should process the error returned in the json
