@@ -473,6 +473,12 @@ class ThehiveConnector(BaseConnector):
         if description:
             data.update({"description": description})
 
+        if not data:
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "At least one of 'task_title', 'task_owner', 'task_status', or 'task_description' must be provided to update the task",
+            )
+
         endpoint = f"api/case/task/{task_id}"
         headers = {"Content-Type": "application/json", "Authorization": self._auth_token}
         ret_val, response = self._make_rest_call(endpoint, action_result, params=None, headers=headers, data=data, method="patch")
