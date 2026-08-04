@@ -475,6 +475,16 @@ class ThehiveConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully updated task")
 
+    @staticmethod
+    def _assign_attachment_hashes(attachment):
+        hash_names_by_length = {64: "sha256", 40: "sha1", 32: "md5"}
+        for value in attachment.get("hashes") or []:
+            if not isinstance(value, str) or any(character not in "0123456789abcdefABCDEF" for character in value):
+                continue
+            name = hash_names_by_length.get(len(value))
+            if name and name not in attachment:
+                attachment[name] = value
+
     def _get_fields(self, param, action_result):
         fields = param.get("fields")
 
@@ -517,12 +527,9 @@ class ThehiveConnector(BaseConnector):
             response_formatted = response
 
         for resp in response_formatted:
-            if "attachment" in resp and "hashes" in resp.get("attachment"):
-                hashes = resp.get("attachment").get("hashes", [])
-                if len(hashes) > 0:
-                    resp["attachment"]["sha256"] = hashes[0]
-                    resp["attachment"]["sha1"] = hashes[1]
-                    resp["attachment"]["md5"] = hashes[2]
+            attachment = resp.get("attachment")
+            if isinstance(attachment, dict):
+                self._assign_attachment_hashes(attachment)
 
             # Django template in the custom view cannot access the keys starting with underscore
             resp["parent"] = resp.get("_parent")
@@ -628,13 +635,10 @@ class ThehiveConnector(BaseConnector):
             response = response[0]
 
         # need to flatten hashes if file was uploaded
-        if response.get("attachment"):
-            hashes = response.get("attachment").get("hashes", [])
-            response["attachment"]["sha256"] = hashes[0]
-            response["attachment"]["sha1"] = hashes[1]
-            response["attachment"]["md5"] = hashes[2]
-
-            del response["attachment"]["hashes"]
+        attachment = response.get("attachment")
+        if isinstance(attachment, dict):
+            self._assign_attachment_hashes(attachment)
+            attachment.pop("hashes", None)
 
         if "failure" in response:
             response = response["failure"][0]
